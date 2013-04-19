@@ -22,7 +22,7 @@ E.g. if a blog post ist available at http://example.org/2013/04/my-first-blog-po
 
 You may use curl to retrieve Linked Data, e.g.:
 
-curl -H 'Accept: text/turtle' http://example.org/2013/04/my-first-blog-post
+curl -H 'Accept: text/turtle' http://example.org/2013/04/my-first-blog-post#me
 
 An author, as a person, is identified by the author page URI appended by the fragment identifier #me.
 
