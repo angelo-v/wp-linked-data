@@ -32,7 +32,7 @@ curl -H 'Accept: text/turtle' http://example.org/author/alice#me
 
 == Installation ==
 
-Just copy the contents of the /src directory to wp-content/plugins/wp-linked-data directory of your WordPress installation and then activate the Plugin from Plugins page.
+Just copy the contents of the /src directory to wp-content/plugins/wp-linked-data directory of your WordPress installation and then activate the plugin from plugins page.
 
 At least PHP 5.3.0 is required to use this plugin.
 
