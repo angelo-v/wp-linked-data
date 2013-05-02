@@ -6,9 +6,9 @@ Version 0.1
 
 ## Installation
 
-The plugin is not yet available at the plugin repository.
+The plugin is available at the plugin repository. Just search for wp-linked-data in the plugins section of your workpress admin backend.
 
-Just copy the contents of the /src directory to wp-content/plugins/wp-linked-data directory of your WordPress installation and then activate the plugin from plugins page.
+Alternatively you may copy the contents of the /src directory to wp-content/plugins/wp-linked-data directory of your WordPress installation and then activate the plugin from plugins page.
 
 At least PHP 5.3.0 is required to use this plugin.
 
