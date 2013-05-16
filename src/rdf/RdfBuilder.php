@@ -40,10 +40,10 @@ class RdfBuilder {
         $post_resource->set ('dc:created', \EasyRdf_Literal_Date::parse($post->post_date));
 
         $author = get_userdata ($post->post_author);
-        $author_uri = $this->getAuthorUri ($author);
-        $author_resource = $graph->resource ($author_uri, 'foaf:Person');
-        $author_resource->set ('foaf:name', $author->display_name);
-        $post_resource->set ('dc:creator', $author_resource);
+        $accountUri = $this->getAccountUri ($author);
+        $account_resource = $graph->resource ($accountUri, 'sioc:UserAccount');
+        $account_resource->set ('sioc:name', $author->display_name);
+        $post_resource->set ('sioc:has_creator', $account_resource);
 
         return $graph;
     }
@@ -53,7 +53,15 @@ class RdfBuilder {
     }
 
     private function getAuthorUri ($author) {
-        return untrailingslashit (get_author_posts_url ($author->ID)) . '#me';
+        return $this->getAuthorDocumentUri ($author) . '#me';
+    }
+
+    private function getAccountUri ($author) {
+        return $this->getAuthorDocumentUri ($author) . '#account';
+    }
+
+    private function getAuthorDocumentUri ($author) {
+        return untrailingslashit (get_author_posts_url ($author->ID));
     }
 
     private function getRdfTypeForPost ($queriedObject) {
@@ -65,12 +73,19 @@ class RdfBuilder {
 
     private function buildGraphForUser ($graph, $user, $wpQuery) {
         $author_uri = $this->getAuthorUri ($user);
+        $account_uri = $this->getAccountUri ($user);
         $author_resource = $graph->resource ($author_uri, 'foaf:Person');
+        $account_resource = $graph->resource ($account_uri, 'sioc:UserAccount');
+
         $author_resource->set ('foaf:name', $user->display_name ?: null);
         $author_resource->set ('foaf:givenName', $user->user_firstname ?: null);
         $author_resource->set ('foaf:familyName', $user->user_lastname ?: null);
         $author_resource->set ('foaf:nick', $user->nickname ?: null);
         $author_resource->set ('bio:olb', $user->user_description ?: null);
+        $author_resource->set ('foaf:account', $account_resource);
+
+        $account_resource->set ('sioc:name', $user->display_name ?: null);
+        $account_resource->set ('sioc:account_of', $author_resource);
 
         while ($wpQuery->have_posts ()) {
             $wpQuery->next_post ();
@@ -78,7 +93,7 @@ class RdfBuilder {
             $post_uri = $this->getPostUri ($post);
             $post_resource = $graph->resource ($post_uri, 'sioct:BlogPost');
             $post_resource->set ('dc:title', $post->post_title);
-            $author_resource->add ('foaf:publications', $post_resource);
+            $account_resource->add ('sioc:creator_of', $post_resource);
 
         }
         return $graph;

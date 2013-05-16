@@ -2,7 +2,7 @@
 
 Wordpress-Plugin to publish blog contents as Linked Data.
 
-Version 0.1
+Version 0.2
 
 ## Installation
 
@@ -43,6 +43,12 @@ Version 0.1
 - puplishing blog post metadata as linked data
 - publishing FOAF profiles for blog authors
 - content negotiation supporting Turtle and RDF/XML format
+
+Version 0.2
+
+- distinguish users (persons) and their user accounts
+- use sioc:creator_of instead of foaf:publications
+- ...
 
 
 ## License
