@@ -50,7 +50,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $it = $graph->resource ($postUri);
         $this->assertEquals ('sioct:BlogPost', $it->type ());
         $this->assertProperty($it, 'dc:title', 'My first blog post');
-        $this->assertProperty($it, 'dc:content', 'The posts content');
+        $this->assertProperty($it, 'sioc:content', 'The posts content');
         $this->assertProperty($it, 'dc:modified', \EasyRdf_Literal_Date::parse ('2013-04-17 20:16:41'));
         $this->assertProperty($it, 'dc:created', \EasyRdf_Literal_Date::parse ('2013-03-17 19:16:41'));
 
@@ -58,6 +58,19 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals ('http://example.com/author/1#account', $creator->getUri ());
         $this->assertEquals ('sioc:UserAccount', $creator->type ());
         $this->assertProperty($creator, 'sioc:name', 'Mario Mustermann');
+    }
+
+    public function testPostContentIsPublishedAsPlainText () {
+        $builder = new RdfBuilder();
+        $post = new \WP_Post();
+
+        $post->ID = 1;
+        $post->post_type = 'post';
+        $post->post_content = '<div cass="content">The <strong>posts</strong> content</div><img alt="foo" src="/foo.png" />';
+
+        $graph = $builder->buildGraph ($post, null);
+        $it = $graph->resource ('http://example.com/1#it');
+        $this->assertProperty($it, 'sioc:content', 'The posts content');
     }
 
     public function testBuildGraphForUserWithoutPosts () {

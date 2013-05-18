@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: wp-linked-data
-Plugin URI: http://datenwissen.de
+Plugin URI: http://wordpress.org/extend/plugins/wp-linked-data/
 Description: Publishing blog contents as linked data
-Version: 0.1
+Version: 0.2
 Author: Angelo Veltens
 Author URI: http://me.desone.org/person/aveltens#me
 License: GPLv3

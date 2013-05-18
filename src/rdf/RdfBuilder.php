@@ -35,7 +35,7 @@ class RdfBuilder {
         $post_resource = $graph->resource ($post_uri, $type);
 
         $post_resource->set ('dc:title', $post->post_title);
-        $post_resource->set ('dc:content', $post->post_content);
+        $post_resource->set ('sioc:content', strip_tags($post->post_content));
         $post_resource->set ('dc:modified', \EasyRdf_Literal_Date::parse($post->post_modified));
         $post_resource->set ('dc:created', \EasyRdf_Literal_Date::parse($post->post_date));
 
