@@ -26,6 +26,16 @@ function get_author_posts_url ($id) {
     return 'http://example.com/author/' . $id;
 }
 
+function site_url() {
+    return 'http://example.com';
+}
+
+function get_bloginfo($show) {
+    if ($show == 'name') return 'My cool blog';
+    if ($show == 'description') return 'Cool description';
+    return null;
+}
+
 
 class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
 
@@ -53,6 +63,9 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertProperty($it, 'sioc:content', 'The posts content');
         $this->assertProperty($it, 'dc:modified', \EasyRdf_Literal_Date::parse ('2013-04-17 20:16:41'));
         $this->assertProperty($it, 'dc:created', \EasyRdf_Literal_Date::parse ('2013-03-17 19:16:41'));
+
+        $blogResource = $graph->resource ('http://example.com#it');
+        $this->assertProperty($it, 'sioc:has_container', $blogResource);
 
         $creator = $graph->get ($postUri, 'sioc:has_creator');
         $this->assertEquals ('http://example.com/author/1#account', $creator->getUri ());
@@ -226,5 +239,58 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals ('sioct:BlogPost', $createdPost2->type());
         $this->assertProperty($createdPost2, 'dc:title', 'My second blog post');
     }
+
+    public function testBuildGraphForBlogWithoutPosts () {
+        \EasyRdf_Namespace::set ('sioct', 'http://rdfs.org/sioc/types#');
+
+        $builder = new RdfBuilder();
+        $graph = $builder->buildGraph (null, new \WP_Query());
+
+        $blogUri = 'http://example.com#it';
+        $it = $graph->resource ($blogUri);
+        $this->assertEquals ('sioct:Weblog', $it->type ());
+        $this->assertProperty($it, 'rdfs:label', 'My cool blog');
+        $this->assertProperty($it, 'rdfs:comment', 'Cool description');
+        $this->assertPropertyNotPresent($it, 'sioc:container_of');
+    }
+
+    public function testBuildGraphForBlogWithPosts () {
+        $builder = new RdfBuilder();
+
+        $firstPost = new \WP_Post();
+        $firstPost->ID = 1;
+        $firstPost->post_type = 'post';
+        $firstPost->post_title = 'My first blog post';
+        $firstPost->post_modified = '2013-04-17 20:16:41';
+        $firstPost->post_date = '2013-03-17 19:16:41';
+        $firstPost->post_content = 'The posts content';
+        $firstPost->post_author = 2;
+
+        $secondPost = new \WP_Post();
+        $secondPost->ID = 2;
+        $secondPost->post_type = 'post';
+        $secondPost->post_title = 'My second blog post';
+
+        $posts = array($firstPost, $secondPost);
+
+        $graph = $builder->buildGraph (null, new \WP_Query($posts));
+
+        $blogUri = 'http://example.com#it';
+        $blog = $graph->resource ($blogUri);
+
+        $containedPosts = $blog->allResources ('sioc:container_of');
+        $this->assertEquals (2, count($containedPosts), 'Blog should have 2 posts');
+        $containedPost = array_shift($containedPosts);
+        $this->assertEquals ('http://example.com/1#it', $containedPost->getUri());
+        $this->assertEquals ('sioct:BlogPost', $containedPost->type());
+        $this->assertProperty($containedPost, 'dc:title', 'My first blog post');
+        $createdPost2 = array_shift($containedPosts);
+        $this->assertEquals ('http://example.com/2#it', $createdPost2->getUri());
+        $this->assertEquals ('sioct:BlogPost', $createdPost2->type());
+        $this->assertProperty($createdPost2, 'dc:title', 'My second blog post');
+
+    }
+
+
 
 }

@@ -49,7 +49,7 @@ Version 0.2
 - distinguish users (persons) and their user accounts
 - use sioc:creator_of instead of foaf:publications
 - replaced inexistent dc:content by sioc:content (plain text) for blog post content
-- ...
+- added sioc:Weblog resource for the blog itself
 
 
 ## License

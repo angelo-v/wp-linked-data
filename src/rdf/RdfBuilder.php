@@ -9,6 +9,9 @@ class RdfBuilder {
 
     public function buildGraph ($queriedObject, $wpQuery) {
         $graph = new \EasyRdf_Graph();
+        if (!$queriedObject) {
+            return $this->buildGraphForBlog ($graph, $wpQuery);
+        }
         if ($queriedObject) {
             if ($queriedObject instanceof \WP_User) {
                 return $this->buildGraphForUser ($graph, $queriedObject, $wpQuery);
@@ -41,9 +44,13 @@ class RdfBuilder {
 
         $author = get_userdata ($post->post_author);
         $accountUri = $this->getAccountUri ($author);
-        $account_resource = $graph->resource ($accountUri, 'sioc:UserAccount');
-        $account_resource->set ('sioc:name', $author->display_name);
-        $post_resource->set ('sioc:has_creator', $account_resource);
+        $accountResource = $graph->resource ($accountUri, 'sioc:UserAccount');
+        $accountResource->set ('sioc:name', $author->display_name);
+        $post_resource->set ('sioc:has_creator', $accountResource);
+
+        $blogUri = $this->getBlogUri ();
+        $blogResource = $graph->resource ($blogUri, 'sioct:Weblog');
+        $post_resource->set ('sioc:has_container', $blogResource);
 
         return $graph;
     }
@@ -87,16 +94,32 @@ class RdfBuilder {
         $account_resource->set ('sioc:name', $user->display_name ?: null);
         $account_resource->set ('sioc:account_of', $author_resource);
 
+        $this->linkAllPosts ($wpQuery, $graph, $account_resource, 'sioc:creator_of');
+        return $graph;
+    }
+
+    private function linkAllPosts ($wpQuery, $graph, $resourceToLink, $property) {
         while ($wpQuery->have_posts ()) {
             $wpQuery->next_post ();
             $post = $wpQuery->post;
             $post_uri = $this->getPostUri ($post);
             $post_resource = $graph->resource ($post_uri, 'sioct:BlogPost');
             $post_resource->set ('dc:title', $post->post_title);
-            $account_resource->add ('sioc:creator_of', $post_resource);
-
+            $resourceToLink->add ($property, $post_resource);
         }
+    }
+
+    private function buildGraphForBlog ($graph, $wpQuery) {
+        $blogUri = $this->getBlogUri ();
+        $blogResource = $graph->resource ($blogUri, 'sioct:Weblog');
+        $blogResource->set ('rdfs:label', get_bloginfo('name') ?: null);
+        $blogResource->set ('rdfs:comment', get_bloginfo('description') ?: null);
+        $this->linkAllPosts ($wpQuery, $graph, $blogResource, 'sioc:container_of');
         return $graph;
+    }
+
+    private function getBlogUri () {
+        return site_url () . '#it';
     }
 
 }
