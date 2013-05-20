@@ -37,3 +37,16 @@ Just copy the contents of this directory to wp-content/plugins/wp-linked-data di
 At least PHP 5.3.0 is required to use this plugin.
 
 It is recommended that you install the pecl_http PHP extension (http://pecl.php.net/package/pecl_http). The plugin will work without it, but only with a simplified, inaccurate content negotiation.
+
+== Changelog ==
+
+= 0.2 =
+* distinguish users (persons) and their user accounts
+* use sioc:creator_of instead of foaf:publications
+* replaced inexistent dc:content by sioc:content (plain text) for blog post content
+* added sioc:Weblog resource for the blog itself
+
+= 0.1 =
+* puplishing blog post metadata as linked data
+* publishing FOAF profiles for blog authors
+* content negotiation supporting Turtle and RDF/XML format
