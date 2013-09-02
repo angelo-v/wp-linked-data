@@ -1,0 +1,34 @@
+<h3>Web ID</h3>
+
+<table class="form-table">
+
+    <tr>
+        <th><label for="webId">WebID location</label></th>
+        <td>
+                <input type="radio"
+                       name="webIdLocation"
+                       id="localWebId"
+                       value="localWebId"
+                       <?php echo $this->isWebIdHostedLocally($user) ? 'checked="checked"' : '' ?>
+                />
+                <label
+                        for="localWebId"><?php echo (untrailingslashit (get_author_posts_url ($user->ID)) . "#me")?></label><br/>
+                <span class="description">Let wordpress host your WebID at the above URI.</span><br/>
+
+                <input type="radio"
+                       name="webIdLocation"
+                       id="customWebId"
+                       value="customWebId"
+                       <?php echo $this->isWebIdHostedLocally($user) ? '' : 'checked="checked"' ?>
+                />
+                <label for="customWebId">Other:</label>
+
+                <input type="url" name="webId" id="webId"
+                       value="<?php echo esc_attr (get_the_author_meta ('webId', $user->ID)); ?>"
+                       class="regular-text"/><br/>
+                    <span class="description">Enter your Web ID if you have one elsewhere. (<a
+                            href="https://my-profile.eu/profile" target="_blank">Get a Web ID</a>)</span>
+        </td>
+    </tr>
+
+</table>

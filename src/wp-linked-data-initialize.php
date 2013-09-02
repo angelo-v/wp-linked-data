@@ -14,6 +14,10 @@ if (!class_exists ('WpLinkedDataInitializer')) {
             return $interceptor;
         }
 
+        function getUserProfileController () {
+            return new \org\desone\wordpress\wpLinkedData\UserProfileController();
+        }
+
         private function registerRdfNamespaces () {
             EasyRdf_Namespace::set ('bio', 'http://purl.org/vocab/bio/0.1/');
             EasyRdf_Namespace::set ('sioct', 'http://rdfs.org/sioc/types#');

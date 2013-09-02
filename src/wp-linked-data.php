@@ -23,6 +23,7 @@ if (phpVersionSupported()) {
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'rdf/RdfBuilder.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'rdf/RdfPrinter.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'lib/EasyRdf.php');
+    require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'controller/UserProfileController.php');
 }
 
 if (!class_exists ('WpLinkedData')) {
@@ -32,8 +33,13 @@ if (!class_exists ('WpLinkedData')) {
             register_activation_hook (__FILE__, array(&$this, 'onPluginActivation'));
             if (phpVersionSupported()) {
                 add_action('admin_init', array(&$this, 'showWarningIfPeclHttpMissing'));
+
                 $interceptor = $wpLinkedDataInitializer->initialize ();
                 add_action ('wp', array(&$interceptor, 'intercept'));
+
+                $userProfileController = $wpLinkedDataInitializer->getUserProfileController ();
+                add_action ('show_user_profile', array(&$userProfileController, 'renderWebIdSection'));
+                add_action ('personal_options_update', array(&$userProfileController, 'saveWebIdData'));
             }
         }
 
