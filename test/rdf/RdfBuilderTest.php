@@ -6,13 +6,10 @@ require_once 'test/mock/mock_plugin_dir_path.php';
 require_once 'test/mock/WP_Query.php';
 require_once 'test/mock/WP_Post.php';
 require_once 'test/mock/WP_User.php';
+require_once 'test/mock/service/MockedLocalWebIdService.php';
+require_once 'test/mock/service/MockedCustomWebIdService.php';
 require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'lib/EasyRdf.php');
 require_once 'src/rdf/RdfBuilder.php';
-
-
-function untrailingslashit ($string) {
-    return $string;
-}
 
 function get_permalink ($id) {
     return 'http://example.com/' . $id;
@@ -20,10 +17,6 @@ function get_permalink ($id) {
 
 function get_userdata ($id) {
     return new \WP_User($id, 'Mario Mustermann');
-}
-
-function get_author_posts_url ($id) {
-    return 'http://example.com/author/' . $id;
 }
 
 function site_url() {
@@ -36,14 +29,13 @@ function get_bloginfo($show) {
     return null;
 }
 
-
 class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
 
     public function testBuildGraphForPost () {
 
         \EasyRdf_Namespace::set ('sioct', 'http://rdfs.org/sioc/types#');
 
-        $builder = new RdfBuilder();
+        $builder = new RdfBuilder(new MockedLocalWebIdService());
         $post = new \WP_Post();
 
         $post->ID = 1;
@@ -74,7 +66,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPostContentIsPublishedAsPlainText () {
-        $builder = new RdfBuilder();
+        $builder = new RdfBuilder(new MockedLocalWebIdService());
         $post = new \WP_Post();
 
         $post->ID = 1;
@@ -88,7 +80,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
 
     public function testBuildGraphForUserWithoutPosts () {
         \EasyRdf_Namespace::set ('bio', 'http://purl.org/vocab/bio/0.1/');
-        $builder = new RdfBuilder();
+        $builder = new RdfBuilder(new MockedLocalWebIdService());
         $user = new \WP_User(
             2, 'Maria Musterfrau'
         );
@@ -117,13 +109,34 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertPropertyNotPresent($account, 'sioc:creator_of');
     }
 
+    public function testBuildGraphForUserWithCustomWebId () {
+        $builder = new RdfBuilder(new MockedCustomWebIdService());
+        $user = new \WP_User(
+            2, 'Maria Musterfrau'
+        );
+        $graph = $builder->buildGraph ($user, new \WP_Query());
+
+        $userUri = 'http://custom.webid.example#me';
+        $me = $graph->resource ($userUri);
+        $accountUri = 'http://example.com/author/2#account';
+        $account = $graph->resource ($accountUri);
+
+        $this->assertEquals ('foaf:Person', $me->type ());
+        $this->assertProperty ($me, 'foaf:account', $account);
+
+        $this->assertEquals ('sioc:UserAccount', $account->type ());
+        $this->assertProperty ($account, 'sioc:name', 'Maria Musterfrau');
+        $this->assertProperty ($account, 'sioc:account_of', $me);
+        $this->assertPropertyNotPresent($account, 'sioc:creator_of');
+    }
+
     private function assertProperty ($subject, $predicate, $value) {
         $this->assertEquals ($value, $subject->get ($predicate));
     }
 
     public function testBuildGraphForUserWithoutPostsAndData () {
         \EasyRdf_Namespace::set ('bio', 'http://purl.org/vocab/bio/0.1/');
-        $builder = new RdfBuilder();
+        $builder = new RdfBuilder(new MockedLocalWebIdService());
         $user = new \WP_User(
             2, 'Maria Musterfrau'
         );
@@ -151,7 +164,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
 
     public function testBuildGraphForUserWithoutPostsAndEmptyData () {
         \EasyRdf_Namespace::set ('bio', 'http://purl.org/vocab/bio/0.1/');
-        $builder = new RdfBuilder();
+        $builder = new RdfBuilder(new MockedLocalWebIdService());
         $user = new \WP_User(
             2, 'Maria Musterfrau'
         );
@@ -179,7 +192,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
 
     public function testBuildGraphForUserWithOnePost () {
         \EasyRdf_Namespace::set ('bio', 'http://purl.org/vocab/bio/0.1/');
-        $builder = new RdfBuilder();
+        $builder = new RdfBuilder(new MockedLocalWebIdService());
         $user = new \WP_User(2, 'Maria Musterfrau');
 
         $firstPost = new \WP_Post();
@@ -206,7 +219,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
 
     public function testBuildGraphForUserWithMultiplePosts () {
         \EasyRdf_Namespace::set ('bio', 'http://purl.org/vocab/bio/0.1/');
-        $builder = new RdfBuilder();
+        $builder = new RdfBuilder(new MockedLocalWebIdService());
         $user = new \WP_User(2, 'Maria Musterfrau');
 
         $firstPost = new \WP_Post();
@@ -243,7 +256,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
     public function testBuildGraphForBlogWithoutPosts () {
         \EasyRdf_Namespace::set ('sioct', 'http://rdfs.org/sioc/types#');
 
-        $builder = new RdfBuilder();
+        $builder = new RdfBuilder(new MockedLocalWebIdService());
         $graph = $builder->buildGraph (null, new \WP_Query());
 
         $blogUri = 'http://example.com#it';
@@ -255,7 +268,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testBuildGraphForBlogWithPosts () {
-        $builder = new RdfBuilder();
+        $builder = new RdfBuilder(new MockedLocalWebIdService());
 
         $firstPost = new \WP_Post();
         $firstPost->ID = 1;

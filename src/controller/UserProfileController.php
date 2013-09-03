@@ -24,11 +24,17 @@ class UserProfileController {
         if (!current_user_can ('edit_user', $userId)) {
             return false;
         }
-        update_user_meta ($userId, 'webIdLocation', $_POST['webIdLocation']);
+        update_user_meta ($userId, 'webIdLocation', $this->getWebIdLocation ());
         update_user_meta ($userId, 'webId', $_POST['webId']);
         return true;
     }
 
+    public function getWebIdLocation () {
+        return empty($_POST['webId']) ? WebIdService::LOCAL_WEB_ID : $_POST['webIdLocation'];
+    }
+
+
+    // TODO: replace by call to webid service
     private function isWebIdHostedLocally ($user) {
         return esc_attr (get_the_author_meta ('webIdLocation', $user->ID)) != 'customWebId';
     }

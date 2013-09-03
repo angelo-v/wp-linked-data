@@ -7,6 +7,10 @@ namespace org\desone\wordpress\wpLinkedData;
  */
 class RdfBuilder {
 
+    public function __construct ($webIdService) {
+        $this->webIdService = $webIdService;
+    }
+
     public function buildGraph ($queriedObject, $wpQuery) {
         $graph = new \EasyRdf_Graph();
         if (!$queriedObject) {
@@ -43,7 +47,7 @@ class RdfBuilder {
         $post_resource->set ('dc:created', \EasyRdf_Literal_Date::parse($post->post_date));
 
         $author = get_userdata ($post->post_author);
-        $accountUri = $this->getAccountUri ($author);
+        $accountUri = $this->webIdService->getAccountUri ($author);
         $accountResource = $graph->resource ($accountUri, 'sioc:UserAccount');
         $accountResource->set ('sioc:name', $author->display_name);
         $post_resource->set ('sioc:has_creator', $accountResource);
@@ -59,18 +63,6 @@ class RdfBuilder {
         return untrailingslashit (get_permalink ($post->ID)) . '#it';
     }
 
-    private function getAuthorUri ($author) {
-        return $this->getAuthorDocumentUri ($author) . '#me';
-    }
-
-    private function getAccountUri ($author) {
-        return $this->getAuthorDocumentUri ($author) . '#account';
-    }
-
-    private function getAuthorDocumentUri ($author) {
-        return untrailingslashit (get_author_posts_url ($author->ID));
-    }
-
     private function getRdfTypeForPost ($queriedObject) {
         if ($queriedObject->post_type == 'post') {
             return 'sioct:BlogPost';
@@ -79,8 +71,8 @@ class RdfBuilder {
     }
 
     private function buildGraphForUser ($graph, $user, $wpQuery) {
-        $author_uri = $this->getAuthorUri ($user);
-        $account_uri = $this->getAccountUri ($user);
+        $author_uri = $this->webIdService->getWebIdOf ($user);
+        $account_uri = $this->webIdService->getAccountUri ($user);
         $author_resource = $graph->resource ($author_uri, 'foaf:Person');
         $account_resource = $graph->resource ($account_uri, 'sioc:UserAccount');
 

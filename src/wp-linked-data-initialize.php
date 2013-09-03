@@ -6,7 +6,7 @@ if (!class_exists ('WpLinkedDataInitializer')) {
         function initialize () {
             $this->registerRdfNamespaces ();
             $contentNegotiation = $this->getSupportedContentNegotiation ();
-            $rdfBuilder = new \org\desone\wordpress\wpLinkedData\RdfBuilder();
+            $rdfBuilder = new \org\desone\wordpress\wpLinkedData\RdfBuilder(new \org\desone\wordpress\wpLinkedData\UserProfileWebIdService());
             $rdfPrinter = new \org\desone\wordpress\wpLinkedData\RdfPrinter();
             $interceptor = new \org\desone\wordpress\wpLinkedData\RequestInterceptor(
                 $contentNegotiation, $rdfBuilder, $rdfPrinter

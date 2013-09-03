@@ -24,6 +24,7 @@ if (phpVersionSupported()) {
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'rdf/RdfPrinter.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'lib/EasyRdf.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'controller/UserProfileController.php');
+    require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'service/UserProfileWebIdService.php');
 }
 
 if (!class_exists ('WpLinkedData')) {
