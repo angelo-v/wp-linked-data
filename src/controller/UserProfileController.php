@@ -7,6 +7,12 @@ namespace org\desone\wordpress\wpLinkedData;
  */
 class UserProfileController {
 
+    private $webIdService;
+
+    public function __construct ($webIdService) {
+        $this->webIdService = $webIdService;
+    }
+
     /**
      * Renders html fields that allow to input WebID specific information
      * @param $user The user who's profile is shown
@@ -32,12 +38,5 @@ class UserProfileController {
     public function getWebIdLocation () {
         return empty($_POST['webId']) ? WebIdService::LOCAL_WEB_ID : $_POST['webIdLocation'];
     }
-
-
-    // TODO: replace by call to webid service
-    private function isWebIdHostedLocally ($user) {
-        return esc_attr (get_the_author_meta ('webIdLocation', $user->ID)) != 'customWebId';
-    }
-
 
 }

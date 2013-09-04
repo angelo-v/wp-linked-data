@@ -21,12 +21,12 @@ class UserProfileWebIdService implements WebIdService {
         }
     }
 
-    public function getAccountUri ($user) {
-        return $this->getUserDocumentUri ($user) . '#account';
+    public function getLocalWebId ($user) {
+        return $this->getUserDocumentUri ($user) . '#me';
     }
 
-    private function getLocalWebId ($user) {
-        return $this->getUserDocumentUri ($user) . '#me';
+    public function getAccountUri ($user) {
+        return $this->getUserDocumentUri ($user) . '#account';
     }
 
     private function getUserDocumentUri ($user) {

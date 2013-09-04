@@ -7,6 +7,8 @@ namespace org\desone\wordpress\wpLinkedData;
  */
 class RdfBuilder {
 
+    private $webIdService;
+
     public function __construct ($webIdService) {
         $this->webIdService = $webIdService;
     }

@@ -9,17 +9,17 @@
                        name="webIdLocation"
                        id="localWebId"
                        value="localWebId"
-                       <?php echo $this->isWebIdHostedLocally($user) ? 'checked="checked"' : '' ?>
+                       <?php echo ($this->webIdService->hasUserCustomWebId($user) ? '' : 'checked="checked"') ?>
                 />
                 <label
-                        for="localWebId"><?php echo (untrailingslashit (get_author_posts_url ($user->ID)) . "#me")?></label><br/>
+                        for="localWebId"><?php echo ($this->webIdService->getLocalWebId($user)) ?></label><br/>
                 <span class="description">Let wordpress host your WebID at the above URI.</span><br/>
 
                 <input type="radio"
                        name="webIdLocation"
                        id="customWebId"
                        value="customWebId"
-                       <?php echo $this->isWebIdHostedLocally($user) ? '' : 'checked="checked"' ?>
+                       <?php echo ($this->webIdService->hasUserCustomWebId($user) ? 'checked="checked"' : '') ?>
                 />
                 <label for="customWebId">Other:</label>
 

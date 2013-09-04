@@ -3,10 +3,13 @@
 if (!class_exists ('WpLinkedDataInitializer')) {
     class WpLinkedDataInitializer {
 
+        private $webIdService;
+
         function initialize () {
             $this->registerRdfNamespaces ();
+            $this->webIdService = new \org\desone\wordpress\wpLinkedData\UserProfileWebIdService();
             $contentNegotiation = $this->getSupportedContentNegotiation ();
-            $rdfBuilder = new \org\desone\wordpress\wpLinkedData\RdfBuilder(new \org\desone\wordpress\wpLinkedData\UserProfileWebIdService());
+            $rdfBuilder = new \org\desone\wordpress\wpLinkedData\RdfBuilder($this->webIdService);
             $rdfPrinter = new \org\desone\wordpress\wpLinkedData\RdfPrinter();
             $interceptor = new \org\desone\wordpress\wpLinkedData\RequestInterceptor(
                 $contentNegotiation, $rdfBuilder, $rdfPrinter
@@ -15,7 +18,7 @@ if (!class_exists ('WpLinkedDataInitializer')) {
         }
 
         function getUserProfileController () {
-            return new \org\desone\wordpress\wpLinkedData\UserProfileController();
+            return new \org\desone\wordpress\wpLinkedData\UserProfileController($this->webIdService);
         }
 
         private function registerRdfNamespaces () {
