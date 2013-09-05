@@ -32,6 +32,8 @@ class UserProfileController {
         }
         update_user_meta ($userId, 'webIdLocation', $this->getWebIdLocation ());
         update_user_meta ($userId, 'webId', $_POST['webId']);
+        update_user_meta ($userId, 'publicKeyModulus', $_POST['publicKeyModulus']);
+        update_user_meta ($userId, 'publicKeyExponent', $_POST['publicKeyExponent']);
         return true;
     }
 

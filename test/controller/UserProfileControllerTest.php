@@ -23,6 +23,8 @@ class UserProfileControllerTest extends \PHPUnit_Framework_TestCase {
         global $saved_meta_data;
         $_POST['webIdLocation'] = WebIdService::CUSTOM_WEB_ID;
         $_POST['webId'] = 'http://example.com';
+        $_POST['publicKeyModulus'] = '';
+        $_POST['publicKeyExponent'] = '';
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
         $this->assertTrue ($result);
@@ -34,6 +36,8 @@ class UserProfileControllerTest extends \PHPUnit_Framework_TestCase {
         global $saved_meta_data;
         $_POST['webIdLocation'] = WebIdService::CUSTOM_WEB_ID;
         $_POST['webId'] = 'http://example.com';
+        $_POST['publicKeyModulus'] = '';
+        $_POST['publicKeyExponent'] = '';
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (99);
         $this->assertFalse ($result);
@@ -44,6 +48,8 @@ class UserProfileControllerTest extends \PHPUnit_Framework_TestCase {
         global $saved_meta_data;
         $_POST['webIdLocation'] = WebIdService::CUSTOM_WEB_ID;
         $_POST['webId'] = '';
+        $_POST['publicKeyModulus'] = '';
+        $_POST['publicKeyExponent'] = '';
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
         $this->assertTrue ($result);
@@ -51,6 +57,17 @@ class UserProfileControllerTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals ('', $saved_meta_data['webId']);
     }
 
-
+    public function testSaveRsaPublicKey () {
+        global $saved_meta_data;
+        $_POST['webId'] = '';
+        $_POST['webIdLocation'] = '';
+        $_POST['publicKeyModulus'] = 'abc123';
+        $_POST['publicKeyExponent'] = '1234';
+        $controller = new UserProfileController(null);
+        $result = $controller->saveWebIdData (42);
+        $this->assertTrue ($result);
+        $this->assertEquals ('abc123', $saved_meta_data['publicKeyModulus']);
+        $this->assertEquals (1234, $saved_meta_data['publicKeyExponent']);
+    }
 
 }

@@ -3,13 +3,14 @@
 <table class="form-table">
 
     <tr>
-        <th><label for="webId">WebID location</label></th>
+        <th><label for="webIdLocation">WebID location</label></th>
         <td>
+            <fieldset id="webIdLocation">
                 <input type="radio"
                        name="webIdLocation"
                        id="localWebId"
                        value="localWebId"
-                       <?php echo ($this->webIdService->hasUserCustomWebId($user) ? '' : 'checked="checked"') ?>
+                <?php echo ($this->webIdService->hasUserCustomWebId($user) ? '' : 'checked="checked"') ?>
                 />
                 <label
                         for="localWebId"><?php echo ($this->webIdService->getLocalWebId($user)) ?></label><br/>
@@ -19,7 +20,7 @@
                        name="webIdLocation"
                        id="customWebId"
                        value="customWebId"
-                       <?php echo ($this->webIdService->hasUserCustomWebId($user) ? 'checked="checked"' : '') ?>
+                <?php echo ($this->webIdService->hasUserCustomWebId($user) ? 'checked="checked"' : '') ?>
                 />
                 <label for="customWebId">Other:</label>
 
@@ -28,6 +29,29 @@
                        class="regular-text"/><br/>
                     <span class="description">Enter your Web ID if you have one elsewhere. (<a
                             href="https://my-profile.eu/profile" target="_blank">Get a Web ID</a>)</span>
+            </fieldset>
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <label for="rsaPublicKey">RSA Public Key</label>
+
+            <div class="description">Generate a WebID certificate and enter your public key data here, to use your
+                WordPress WebID profile for authentication on the Web
+            </div>
+        </th>
+        <td>
+            <fieldset id="rsaPublicKey">
+                <input type="number" step="1" name="publicKeyExponent" id="publicKeyExponent"
+                       value="<?php echo esc_attr (get_the_author_meta ('publicKeyExponent', $user->ID)); ?>"
+                       class="regular-text"/><br/>
+                <span class="description">The exponent of your RSA public key</span><br/>
+
+                <textarea name="publicKeyModulus" id="publicKeyModulus" rows="5"
+                          class="regular-text"><?php echo esc_attr (get_the_author_meta ('publicKeyModulus', $user->
+                    ID)); ?></textarea><br/>
+                <span class="description">The modulus of your RSA public key in hex binary</span>
+            </fieldset>
         </td>
     </tr>
 
