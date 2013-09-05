@@ -11,11 +11,15 @@ class MockedLocalWebIdService implements WebIdService {
     }
 
     public function getWebIdOf ($user) {
-        return 'http://example.com/author/' . $user->ID . '#me';
+        return $this->getLocalWebId($user);
     }
 
     public function getAccountUri ($user) {
         return 'http://example.com/author/' . $user->ID . '#account';
+    }
+
+    public function getLocalWebId ($user) {
+        return 'http://example.com/author/' . $user->ID . '#me';
     }
 }
 

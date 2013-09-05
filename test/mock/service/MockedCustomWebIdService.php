@@ -17,6 +17,10 @@ class MockedCustomWebIdService implements WebIdService {
     public function getAccountUri ($user) {
         return 'http://example.com/author/' . $user->ID . '#account';
     }
+
+    public function getLocalWebId ($user) {
+        return 'http://example.com/author/' . $user->ID . '#me';
+    }
 }
 
 ?>

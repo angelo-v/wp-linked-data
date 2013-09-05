@@ -23,7 +23,7 @@ class UserProfileControllerTest extends \PHPUnit_Framework_TestCase {
         global $saved_meta_data;
         $_POST['webIdLocation'] = WebIdService::CUSTOM_WEB_ID;
         $_POST['webId'] = 'http://example.com';
-        $controller = new UserProfileController();
+        $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
         $this->assertTrue ($result);
         $this->assertEquals (WebIdService::CUSTOM_WEB_ID, $saved_meta_data['webIdLocation']);
@@ -34,7 +34,7 @@ class UserProfileControllerTest extends \PHPUnit_Framework_TestCase {
         global $saved_meta_data;
         $_POST['webIdLocation'] = WebIdService::CUSTOM_WEB_ID;
         $_POST['webId'] = 'http://example.com';
-        $controller = new UserProfileController();
+        $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (99);
         $this->assertFalse ($result);
         $this->assertTrue (empty($saved_meta_data));
@@ -44,7 +44,7 @@ class UserProfileControllerTest extends \PHPUnit_Framework_TestCase {
         global $saved_meta_data;
         $_POST['webIdLocation'] = WebIdService::CUSTOM_WEB_ID;
         $_POST['webId'] = '';
-        $controller = new UserProfileController();
+        $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
         $this->assertTrue ($result);
         $this->assertEquals (WebIdService::LOCAL_WEB_ID, $saved_meta_data['webIdLocation']);
