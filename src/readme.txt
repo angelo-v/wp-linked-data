@@ -47,6 +47,10 @@ Whatever option you choose, your wordpress account will always be identified as 
 
 If you do not have a WebID yet, choose the first option, or get a WebID at http://my-profile.eu. More Information about WebID: http://webid.info/
 
+==== RSA Public Key ====
+
+You may enter the exponent and modulus of the public key of your WebID certificate. This will allow you to use your WordPress WebID for authentication elsewhere on the web. The wp-linked-data plugin is not yet capable of creating WebID certificates, so you will have to create the certificate with another tool (e.g. openssl) and enter the data into this section afterwards.
+
 == Installation ==
 
 Just copy the contents of this directory to wp-content/plugins/wp-linked-data directory of your WordPress installation and then activate the plugin from plugins page.
@@ -59,6 +63,7 @@ It is recommended that you install the pecl_http PHP extension (http://pecl.php.
 
 = 0.3 =
 * choose between locally hosted WebID and custom WebID
+* add RSA public key to your profile
 
 = 0.2 =
 * distinguish users (persons) and their user accounts
