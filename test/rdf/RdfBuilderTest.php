@@ -130,6 +130,38 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertPropertyNotPresent($account, 'sioc:creator_of');
     }
 
+    public function testBuildGraphForUserWithRsaPublicKey () {
+        $webIdService = $this->getMock ('WebIdService', array('getWebIdOf', 'getAccountUri', 'getRsaPublicKey'));
+
+        $webIdService->expects ($this->once ())
+            ->method ('getWebIdOf')
+            ->will($this->returnValue('http://example.com/author/2#me'));
+
+        $webIdService->expects ($this->once ())
+            ->method ('getAccountUri')
+            ->will($this->returnValue('http://example.com/author/2#account'));
+
+        $webIdService->expects ($this->once ())
+            ->method ('getRsaPublicKey')
+            ->will($this->returnValue(new RsaPublicKey('1234', 'abc123')));
+
+
+        $builder = new RdfBuilder($webIdService);
+        $user = new \WP_User(
+            2, 'Maria Musterfrau'
+        );
+        $graph = $builder->buildGraph ($user, new \WP_Query());
+
+        $userUri = 'http://example.com/author/2#me';
+        $me = $graph->resource ($userUri);
+
+        $key = $me->get ('cert:key');
+        $this->assertNotNull ($key, 'RSA public key should be present');
+        $this->assertEquals ('cert:RSAPublicKey', $key->type ());
+        $this->assertProperty ($key, 'cert:exponent', new \EasyRdf_Literal_Integer(1234));
+        $this->assertProperty ($key, 'cert:modulus', new \EasyRdf_Literal_HexBinary('abc123'));
+    }
+
     private function assertProperty ($subject, $predicate, $value) {
         $this->assertEquals ($value, $subject->get ($predicate));
     }

@@ -88,6 +88,14 @@ class RdfBuilder {
         $account_resource->set ('sioc:name', $user->display_name ?: null);
         $account_resource->set ('sioc:account_of', $author_resource);
 
+        $rsaPublicKey = $this->webIdService->getRsaPublicKey ($user);
+        if ($rsaPublicKey) {
+            $key_resource = $graph->newBNode ('cert:RSAPublicKey');
+            $key_resource->set ('cert:exponent', new \EasyRdf_Literal_Integer($rsaPublicKey->getExponent ()));
+            $key_resource->set ('cert:modulus', new \EasyRdf_Literal_HexBinary($rsaPublicKey->getModulus ()));
+            $author_resource->set ('cert:key', $key_resource);
+        }
+
         $this->linkAllPosts ($wpQuery, $graph, $account_resource, 'sioc:creator_of');
         return $graph;
     }
