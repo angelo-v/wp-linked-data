@@ -3,6 +3,7 @@
 namespace org\desone\wordpress\wpLinkedData;
 
 require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'service/WebIdService.php');
+require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'model/RsaPublicKey.php');
 
 /**
  * Helps to retrieve the correct WebID and account uri of a user
@@ -31,6 +32,15 @@ class UserProfileWebIdService implements WebIdService {
 
     private function getUserDocumentUri ($user) {
         return untrailingslashit (get_author_posts_url ($user->ID));
+    }
+
+    public function getRsaPublicKey ($user) {
+        $exponent = esc_attr (get_the_author_meta ('publicKeyExponent', $user->ID));
+        $modulus = esc_attr (get_the_author_meta ('publicKeyModulus', $user->ID));
+        if (empty($exponent) || empty($modulus)) {
+            return null;
+        }
+        return new RsaPublicKey($exponent, $modulus);
     }
 }
 

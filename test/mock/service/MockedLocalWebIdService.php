@@ -21,6 +21,10 @@ class MockedLocalWebIdService implements WebIdService {
     public function getLocalWebId ($user) {
         return 'http://example.com/author/' . $user->ID . '#me';
     }
+
+    public function getRsaPublicKey ($user) {
+        return null;
+    }
 }
 
 ?>

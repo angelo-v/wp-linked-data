@@ -36,6 +36,13 @@ interface WebIdService {
      */
     public function getLocalWebId ($user);
 
+    /**
+     * @abstract
+     * @param $user
+     * @return RsaPublicKey of the given user, if the user has entered one
+     */
+    public function getRsaPublicKey ($user);
+
 }
 
 ?>

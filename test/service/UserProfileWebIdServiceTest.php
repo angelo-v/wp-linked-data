@@ -18,18 +18,25 @@ function get_author_posts_url ($id) {
     return 'http://example.com/author/' . $id;
 }
 
+$mockedMetaData = array(
+    1 => array(
+        'webIdLocation' => WebIdService::CUSTOM_WEB_ID,
+        'webId' => 'http://custom.webid.example#me'
+    ),
+    2 => array(
+        'webIdLocation' => WebIdService::LOCAL_WEB_ID,
+        'webId' => ''
+    )
+);
+
 function get_the_author_meta ($field, $userId) {
-    $metadata = array(
-        1 => array(
-            'webIdLocation' => WebIdService::CUSTOM_WEB_ID,
-            'webId' => 'http://custom.webid.example#me'
-        ),
-        2 => array(
-            'webIdLocation' => WebIdService::LOCAL_WEB_ID,
-            'webId' => ''
-        ),
-    );
-    return $metadata[$userId][$field];
+    global $mockedMetaData;
+    return $mockedMetaData[$userId][$field];
+}
+
+function setMockedMetaData ($userId, $dataArray) {
+    global $mockedMetaData;
+    $mockedMetaData[$userId] = $dataArray;
 }
 
 
@@ -67,5 +74,44 @@ class UserProfileWebIdServiceTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals('http://example.com/author/2#me', $service->getWebIdOf($user));
     }
 
+    public function testGetRsaPublicKey () {
+        setMockedMetaData (3, array(
+            'publicKeyExponent' => 1234,
+            'publicKeyModulus' => 'abc123'
+        ));
+        $service = new UserProfileWebIdService();
+        $user = new \WP_User(
+            3, 'Walter Whatever'
+        );
+        $key = $service->getRsaPublicKey ($user);
+        $this->assertNotNull ($key);
+        $this->assertEquals(1234, $key->getExponent());
+        $this->assertEquals('abc123', $key->getModulus());
+    }
 
+    public function testGetNoRsaPublicKeyIfExponentIsMissing () {
+        setMockedMetaData (3, array(
+            'publicKeyExponent' => '',
+            'publicKeyModulus' => 'abc123'
+        ));
+        $service = new UserProfileWebIdService();
+        $user = new \WP_User(
+            3, 'Walter Whatever'
+        );
+        $key = $service->getRsaPublicKey ($user);
+        $this->assertNull ($key);
+    }
+
+    public function testGetNoRsaPublicKeyIfModulusIsMissing () {
+        setMockedMetaData (3, array(
+            'publicKeyExponent' => 1234,
+            'publicKeyModulus' => ''
+        ));
+        $service = new UserProfileWebIdService();
+        $user = new \WP_User(
+            3, 'Walter Whatever'
+        );
+        $key = $service->getRsaPublicKey ($user);
+        $this->assertNull ($key);
+    }
 }
