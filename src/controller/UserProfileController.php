@@ -34,7 +34,23 @@ class UserProfileController {
         update_user_meta ($userId, 'webId', $_POST['webId']);
         update_user_meta ($userId, 'publicKeyModulus', $_POST['publicKeyModulus']);
         update_user_meta ($userId, 'publicKeyExponent', $_POST['publicKeyExponent']);
+        $this->saveAdditionalRdf ($userId);
         return true;
+    }
+
+    public function saveAdditionalRdf ($userId) {
+        try {
+            $serializedRdf = trim (stripslashes ($_POST['additionalRdf']));
+            if (!empty($serializedRdf)) {
+                $graph = new \EasyRdf_Graph();
+                $graph->parse ($serializedRdf); // parsing if done to check if syntax is valid
+                update_user_meta ($userId, 'additionalRdf', $serializedRdf);
+            } else {
+                update_user_meta ($userId, 'additionalRdf', '');
+            }
+        } catch (\Exception $ex) {
+            wp_die ('Addtional RDF Triples could not be saved. Cause: ' . $ex->getMessage ());
+        }
     }
 
     public function getWebIdLocation () {

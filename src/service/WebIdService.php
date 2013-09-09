@@ -43,6 +43,13 @@ interface WebIdService {
      */
     public function getRsaPublicKey ($user);
 
+    /**
+     * @abstract
+     * @param $user
+     * @return String The URI of the given user's wordpress profile document
+     */
+    public function getUserDocumentUri($user);
+
 }
 
 ?>

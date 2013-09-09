@@ -30,7 +30,7 @@ class UserProfileWebIdService implements WebIdService {
         return $this->getUserDocumentUri ($user) . '#account';
     }
 
-    private function getUserDocumentUri ($user) {
+    public function getUserDocumentUri ($user) {
         return untrailingslashit (get_author_posts_url ($user->ID));
     }
 

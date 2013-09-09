@@ -54,5 +54,19 @@
             </fieldset>
         </td>
     </tr>
+    <tr>
+        <th>
+            <label for="additionalRdf">Additional RDF Triples</label>
+
+            <div class="description">Insert any RDF triples you would like to add to your local profile document at <?php echo ($this->webIdService->getUserDocumentUri($user)) ?>
+            </div>
+        </th>
+        <td>
+                <textarea name="additionalRdf" id="additionalRdf" rows="10"
+                          class="regular-text"><?php echo esc_attr (get_the_author_meta ('additionalRdf', $user->
+                    ID)); ?></textarea><br/>
+                <span class="description">Enter valid Turtle, N3 or RDF/XML</span><br/>
+        </td>
+    </tr>
 
 </table>
