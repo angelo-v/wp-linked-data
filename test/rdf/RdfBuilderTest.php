@@ -7,7 +7,6 @@ require_once 'test/mock/WP_Query.php';
 require_once 'test/mock/WP_Post.php';
 require_once 'test/mock/WP_User.php';
 require_once 'test/mock/service/MockedLocalWebIdService.php';
-require_once 'test/mock/service/MockedCustomWebIdService.php';
 require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'lib/EasyRdf.php');
 require_once 'src/rdf/RdfBuilder.php';
 
@@ -110,7 +109,18 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testBuildGraphForUserWithCustomWebId () {
-        $builder = new RdfBuilder(new MockedCustomWebIdService());
+
+        $webIdService = $this->getMock ('WebIdService', array('getWebIdOf', 'getAccountUri', 'getRsaPublicKey'));
+
+        $webIdService->expects ($this->once ())
+            ->method ('getWebIdOf')
+            ->will($this->returnValue('http://custom.webid.example#me'));
+
+        $webIdService->expects ($this->once ())
+            ->method ('getAccountUri')
+            ->will($this->returnValue('http://example.com/author/2#account'));
+
+        $builder = new RdfBuilder($webIdService);
         $user = new \WP_User(
             2, 'Maria Musterfrau'
         );
