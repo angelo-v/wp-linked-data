@@ -25,7 +25,8 @@ $mockedMetaData = array(
     ),
     2 => array(
         'webIdLocation' => WebIdService::LOCAL_WEB_ID,
-        'webId' => ''
+        'webId' => '',
+        'additionalRdf' => ''
     )
 );
 

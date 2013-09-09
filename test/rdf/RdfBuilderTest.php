@@ -18,12 +18,14 @@ function get_userdata ($id) {
     return new \WP_User($id, 'Mario Mustermann');
 }
 
-function site_url() {
+function site_url () {
     return 'http://example.com';
 }
 
-function get_bloginfo($show) {
-    if ($show == 'name') return 'My cool blog';
+function get_bloginfo ($show) {
+    if ($show == 'name') {
+        return 'My cool blog';
+    }
     if ($show == 'description') return 'Cool description';
     return null;
 }
@@ -50,18 +52,18 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $postUri = 'http://example.com/1#it';
         $it = $graph->resource ($postUri);
         $this->assertEquals ('sioct:BlogPost', $it->type ());
-        $this->assertProperty($it, 'dc:title', 'My first blog post');
-        $this->assertProperty($it, 'sioc:content', 'The posts content');
-        $this->assertProperty($it, 'dc:modified', \EasyRdf_Literal_Date::parse ('2013-04-17 20:16:41'));
-        $this->assertProperty($it, 'dc:created', \EasyRdf_Literal_Date::parse ('2013-03-17 19:16:41'));
+        $this->assertProperty ($it, 'dc:title', 'My first blog post');
+        $this->assertProperty ($it, 'sioc:content', 'The posts content');
+        $this->assertProperty ($it, 'dc:modified', \EasyRdf_Literal_Date::parse ('2013-04-17 20:16:41'));
+        $this->assertProperty ($it, 'dc:created', \EasyRdf_Literal_Date::parse ('2013-03-17 19:16:41'));
 
         $blogResource = $graph->resource ('http://example.com#it');
-        $this->assertProperty($it, 'sioc:has_container', $blogResource);
+        $this->assertProperty ($it, 'sioc:has_container', $blogResource);
 
         $creator = $graph->get ($postUri, 'sioc:has_creator');
         $this->assertEquals ('http://example.com/author/1#account', $creator->getUri ());
         $this->assertEquals ('sioc:UserAccount', $creator->type ());
-        $this->assertProperty($creator, 'sioc:name', 'Mario Mustermann');
+        $this->assertProperty ($creator, 'sioc:name', 'Mario Mustermann');
     }
 
     public function testPostContentIsPublishedAsPlainText () {
@@ -74,7 +76,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
 
         $graph = $builder->buildGraph ($post, null);
         $it = $graph->resource ('http://example.com/1#it');
-        $this->assertProperty($it, 'sioc:content', 'The posts content');
+        $this->assertProperty ($it, 'sioc:content', 'The posts content');
     }
 
     public function testBuildGraphForUserWithoutPosts () {
@@ -105,7 +107,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals ('sioc:UserAccount', $account->type ());
         $this->assertProperty ($account, 'sioc:name', 'Maria Musterfrau');
         $this->assertProperty ($account, 'sioc:account_of', $me);
-        $this->assertPropertyNotPresent($account, 'sioc:creator_of');
+        $this->assertPropertyNotPresent ($account, 'sioc:creator_of');
     }
 
     public function testBuildGraphForUserWithCustomWebId () {
@@ -114,11 +116,11 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
 
         $webIdService->expects ($this->once ())
             ->method ('getWebIdOf')
-            ->will($this->returnValue('http://custom.webid.example#me'));
+            ->will ($this->returnValue ('http://custom.webid.example#me'));
 
         $webIdService->expects ($this->once ())
             ->method ('getAccountUri')
-            ->will($this->returnValue('http://example.com/author/2#account'));
+            ->will ($this->returnValue ('http://example.com/author/2#account'));
 
         $builder = new RdfBuilder($webIdService);
         $user = new \WP_User(
@@ -137,7 +139,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertEquals ('sioc:UserAccount', $account->type ());
         $this->assertProperty ($account, 'sioc:name', 'Maria Musterfrau');
         $this->assertProperty ($account, 'sioc:account_of', $me);
-        $this->assertPropertyNotPresent($account, 'sioc:creator_of');
+        $this->assertPropertyNotPresent ($account, 'sioc:creator_of');
     }
 
     public function testBuildGraphForUserWithRsaPublicKey () {
@@ -145,15 +147,15 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
 
         $webIdService->expects ($this->once ())
             ->method ('getWebIdOf')
-            ->will($this->returnValue('http://example.com/author/2#me'));
+            ->will ($this->returnValue ('http://example.com/author/2#me'));
 
         $webIdService->expects ($this->once ())
             ->method ('getAccountUri')
-            ->will($this->returnValue('http://example.com/author/2#account'));
+            ->will ($this->returnValue ('http://example.com/author/2#account'));
 
         $webIdService->expects ($this->once ())
             ->method ('getRsaPublicKey')
-            ->will($this->returnValue(new RsaPublicKey('1234', 'abc123')));
+            ->will ($this->returnValue (new RsaPublicKey('1234', 'abc123')));
 
 
         $builder = new RdfBuilder($webIdService);
@@ -172,6 +174,38 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $this->assertProperty ($key, 'cert:modulus', new \EasyRdf_Literal_HexBinary('abc123'));
     }
 
+    public function testBuildGraphForUserWithAdditionalRdf () {
+        $webIdService = $this->getMock ('WebIdService', array('getWebIdOf', 'getAccountUri', 'getRsaPublicKey'));
+
+        $webIdService->expects ($this->once ())
+            ->method ('getWebIdOf')
+            ->will ($this->returnValue ('http://example.com/author/2#me'));
+
+        $webIdService->expects ($this->once ())
+            ->method ('getAccountUri')
+            ->will ($this->returnValue ('http://example.com/author/2#account'));
+
+        setMockedMetaData (2, array(
+            'additionalRdf' =>
+            '@prefix foaf: <http://xmlns.com/foaf/0.1/>.' .
+                '<http://example.com/author/2#me> foaf:knows <http://friends.example.com/trudy#i>.' .
+                '<http://friends.example.com/trudy#i> foaf:name "Trudy".'
+        ));
+
+        $builder = new RdfBuilder($webIdService);
+        $user = new \WP_User(
+            2, 'Maria Musterfrau'
+        );
+        $graph = $builder->buildGraph ($user, new \WP_Query());
+
+        $userUri = 'http://example.com/author/2#me';
+        $me = $graph->resource ($userUri);
+        $friend = $graph->resource('http://friends.example.com/trudy#i');
+        $this->assertProperty ($me, 'foaf:knows', $friend);
+        $this->assertProperty ($friend, 'foaf:name', 'Trudy');
+
+    }
+
     private function assertProperty ($subject, $predicate, $value) {
         $this->assertEquals ($value, $subject->get ($predicate));
     }
@@ -187,7 +221,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $userUri = 'http://example.com/author/2#me';
         $me = $graph->resource ($userUri);
         $this->assertEquals ('foaf:Person', $me->type ());
-        $this->assertProperty($me, 'foaf:name', 'Maria Musterfrau');
+        $this->assertProperty ($me, 'foaf:name', 'Maria Musterfrau');
         $this->assertPropertyNotPresent ($me, 'foaf:nick');
         $this->assertPropertyNotPresent ($me, 'foaf:givenName');
         $this->assertPropertyNotPresent ($me, 'foaf:familyName');
@@ -197,11 +231,11 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $account = $graph->resource ($accountUri);
         $this->assertEquals ('sioc:UserAccount', $account->type ());
         $this->assertEquals ('Maria Musterfrau', $account->get ('sioc:name'));
-        $this->assertPropertyNotPresent($account, 'sioc:creator_of');
+        $this->assertPropertyNotPresent ($account, 'sioc:creator_of');
     }
 
     private function assertPropertyNotPresent ($me, $predicate) {
-        $this->assertNull ($me->get ($predicate), 'No '. $predicate .' should be present');
+        $this->assertNull ($me->get ($predicate), 'No ' . $predicate . ' should be present');
     }
 
     public function testBuildGraphForUserWithoutPostsAndEmptyData () {
@@ -229,7 +263,7 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $account = $graph->resource ($accountUri);
         $this->assertEquals ('sioc:UserAccount', $account->type ());
         $this->assertEquals ('Maria Musterfrau', $account->get ('sioc:name'));
-        $this->assertPropertyNotPresent($account, 'sioc:creator_of');
+        $this->assertPropertyNotPresent ($account, 'sioc:creator_of');
     }
 
     public function testBuildGraphForUserWithOnePost () {
@@ -252,11 +286,11 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $accountUri = 'http://example.com/author/2#account';
         $account = $graph->resource ($accountUri);
         $createdPosts = $account->allResources ('sioc:creator_of');
-        $this->assertEquals (1, count($createdPosts), 'User should have 1 post');
-        $createdPost = array_shift($createdPosts);
-        $this->assertEquals ('http://example.com/1#it', $createdPost->getUri());
-        $this->assertEquals ('sioct:BlogPost', $createdPost->type());
-        $this->assertProperty($createdPost, 'dc:title', 'My first blog post');
+        $this->assertEquals (1, count ($createdPosts), 'User should have 1 post');
+        $createdPost = array_shift ($createdPosts);
+        $this->assertEquals ('http://example.com/1#it', $createdPost->getUri ());
+        $this->assertEquals ('sioct:BlogPost', $createdPost->type ());
+        $this->assertProperty ($createdPost, 'dc:title', 'My first blog post');
     }
 
     public function testBuildGraphForUserWithMultiplePosts () {
@@ -284,15 +318,15 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $accountUri = 'http://example.com/author/2#account';
         $account = $graph->resource ($accountUri);
         $createdPosts = $account->allResources ('sioc:creator_of');
-        $this->assertEquals (2, count($createdPosts), 'User should have 2 posts');
-        $createdPost = array_shift($createdPosts);
-        $this->assertEquals ('http://example.com/1#it', $createdPost->getUri());
-        $this->assertEquals ('sioct:BlogPost', $createdPost->type());
-        $this->assertProperty($createdPost, 'dc:title', 'My first blog post');
-        $createdPost2 = array_shift($createdPosts);
-        $this->assertEquals ('http://example.com/2#it', $createdPost2->getUri());
-        $this->assertEquals ('sioct:BlogPost', $createdPost2->type());
-        $this->assertProperty($createdPost2, 'dc:title', 'My second blog post');
+        $this->assertEquals (2, count ($createdPosts), 'User should have 2 posts');
+        $createdPost = array_shift ($createdPosts);
+        $this->assertEquals ('http://example.com/1#it', $createdPost->getUri ());
+        $this->assertEquals ('sioct:BlogPost', $createdPost->type ());
+        $this->assertProperty ($createdPost, 'dc:title', 'My first blog post');
+        $createdPost2 = array_shift ($createdPosts);
+        $this->assertEquals ('http://example.com/2#it', $createdPost2->getUri ());
+        $this->assertEquals ('sioct:BlogPost', $createdPost2->type ());
+        $this->assertProperty ($createdPost2, 'dc:title', 'My second blog post');
     }
 
     public function testBuildGraphForBlogWithoutPosts () {
@@ -304,9 +338,9 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $blogUri = 'http://example.com#it';
         $it = $graph->resource ($blogUri);
         $this->assertEquals ('sioct:Weblog', $it->type ());
-        $this->assertProperty($it, 'rdfs:label', 'My cool blog');
-        $this->assertProperty($it, 'rdfs:comment', 'Cool description');
-        $this->assertPropertyNotPresent($it, 'sioc:container_of');
+        $this->assertProperty ($it, 'rdfs:label', 'My cool blog');
+        $this->assertProperty ($it, 'rdfs:comment', 'Cool description');
+        $this->assertPropertyNotPresent ($it, 'sioc:container_of');
     }
 
     public function testBuildGraphForBlogWithPosts () {
@@ -334,18 +368,17 @@ class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
         $blog = $graph->resource ($blogUri);
 
         $containedPosts = $blog->allResources ('sioc:container_of');
-        $this->assertEquals (2, count($containedPosts), 'Blog should have 2 posts');
-        $containedPost = array_shift($containedPosts);
-        $this->assertEquals ('http://example.com/1#it', $containedPost->getUri());
-        $this->assertEquals ('sioct:BlogPost', $containedPost->type());
-        $this->assertProperty($containedPost, 'dc:title', 'My first blog post');
-        $createdPost2 = array_shift($containedPosts);
-        $this->assertEquals ('http://example.com/2#it', $createdPost2->getUri());
-        $this->assertEquals ('sioct:BlogPost', $createdPost2->type());
-        $this->assertProperty($createdPost2, 'dc:title', 'My second blog post');
+        $this->assertEquals (2, count ($containedPosts), 'Blog should have 2 posts');
+        $containedPost = array_shift ($containedPosts);
+        $this->assertEquals ('http://example.com/1#it', $containedPost->getUri ());
+        $this->assertEquals ('sioct:BlogPost', $containedPost->type ());
+        $this->assertProperty ($containedPost, 'dc:title', 'My first blog post');
+        $createdPost2 = array_shift ($containedPosts);
+        $this->assertEquals ('http://example.com/2#it', $createdPost2->getUri ());
+        $this->assertEquals ('sioct:BlogPost', $createdPost2->type ());
+        $this->assertProperty ($createdPost2, 'dc:title', 'My second blog post');
 
     }
-
 
 
 }
