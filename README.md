@@ -1,6 +1,6 @@
 # wp-linked-data
 
-Wordpress-Plugin to publish blog contents as Linked Data.
+WordPress-Plugin to publish blog contents as Linked Data.
 
 Version 0.3-SNAPSHOT
 
@@ -56,6 +56,10 @@ If you do not have a WebID yet, choose the first option, or get a WebID at http:
 
 You may enter the exponent and modulus of the public key of your WebID certificate. This will allow you to use your WordPress WebID for authentication elsewhere on the web. The wp-linked-data plugin is not yet capable of creating WebID certificates, so you will have to create the certificate with another tool (e.g. openssl) and enter the data into this section afterwards.
 
+#### Additional RDF Triples
+
+You may enter any RDF triples as RDF/XML, Turtle or N3. The triples will occur in the RDF representation of your WordPress profile document at at http://[your-domain]/author/[your-username]
+
 ## Contact
 
 Please contact me for any questions & feedback: [angelo.veltens@online.de](mailto:angelo.veltens@online.de)
@@ -79,7 +83,7 @@ Version 0.3
 
 - choose between locally hosted WebID and custom WebID
 - add RSA public key to your profile
-
+- add custom RDF triples to your profile document
 
 ## License
 
