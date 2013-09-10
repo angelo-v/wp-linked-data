@@ -2,7 +2,7 @@
 
 WordPress-Plugin to publish blog contents as Linked Data.
 
-Version 0.3-SNAPSHOT
+Version 0.3
 
 ## Installation
 
