@@ -12,7 +12,9 @@ Publishes blog post & author data as Linked Data.
 
 == Description ==
 
-=== Linked Data ===
+The plugin publishes Linked Data about your blog contents and helps you hosting or connecting your WebID.
+
+= Linked Data =
 
 Turtle and RDF/XML documents can be retrieved performing a HTTP GET request with an appropriate HTTP-Accept-Header set. Blog posts and pages are identified by their original document URI appended by the fragment identifier #it.
 
@@ -32,11 +34,11 @@ curl -H 'Accept: text/turtle' http://example.org/author/alice#me
 
 Instead of using WordPress to host the FOAF-Profile, you are able to link your existing WebID to your WordPress account. (See next section)
 
-=== WebID ===
+= WebID =
 
 The Plugin adds a WebID section to the user profile screen in the admin backend. (Note: The section is only available, when editing _your own_ profile).
 
-==== WebID Location ====
+**WebID Location**
 
 You can choose, where your WebID is hosted:
 
@@ -47,11 +49,11 @@ Whatever option you choose, your wordpress account will always be identified as 
 
 If you do not have a WebID yet, choose the first option, or get a WebID at http://my-profile.eu. More Information about WebID: http://webid.info/
 
-==== RSA Public Key ====
+**RSA Public Key**
 
 You may enter the exponent and modulus of the public key of your WebID certificate. This will allow you to use your WordPress WebID for authentication elsewhere on the web. The wp-linked-data plugin is not yet capable of creating WebID certificates, so you will have to create the certificate with another tool (e.g. openssl) and enter the data into this section afterwards.
 
-==== Additional RDF Triples ====
+**Additional RDF**
 
 You may enter any RDF triples as RDF/XML, Turtle or N3. The triples will occur in the RDF representation of your WordPress profile document at at http://[your-domain]/author/[your-username]
 
