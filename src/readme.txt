@@ -63,7 +63,7 @@ Just copy the contents of this directory to wp-content/plugins/wp-linked-data di
 
 At least PHP 5.3.0 is required to use this plugin.
 
-It is recommended that you install the pecl_http PHP extension (http://pecl.php.net/package/pecl_http). The plugin will work without it, but only with a simplified, inaccurate content negotiation.
+It is recommended that you install the pecl_http PHP extension (http://pecl.php.net/package/pecl_http). The plugin will work without it, but only with a simplified, inaccurate content negotiation. If you use pecl_http, it must be at least version 0.19.0.
 
 == Changelog ==
 
