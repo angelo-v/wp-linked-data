@@ -3,7 +3,7 @@ Contributors: aveltens
 Author URI: http://me.desone.org/person/aveltens#me
 Tags: linked data, rdf, semantic web, webid
 Requires at least: 3.5.1
-Tested up to: 4.7
+Tested up to: 4.8
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0
