@@ -1,9 +1,9 @@
 === wp-linked-data ===
 Contributors: aveltens
-Author URI: http://me.desone.org/person/aveltens#me
+Author URI: https://datenwissen.de/
 Tags: linked data, rdf, semantic web, webid
 Requires at least: 3.5.1
-Tested up to: 4.9
+Tested up to: 4.9.8
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0
@@ -47,7 +47,7 @@ You can choose, where your WebID is hosted:
 
 Whatever option you choose, your wordpress account will always be identified as "http://[your-domain]\>/author/[your-username]>#account". The option only affects, how you, as a person, will be identified.
 
-If you do not have a WebID yet, choose the first option, or get a WebID at http://my-profile.eu. More Information about WebID: http://webid.info/
+If you do not have a WebID yet, choose the first option, or get a WebID at https://solid.community. More Information about WebID: http://webid.info/
 
 **RSA Public Key**
 
@@ -66,6 +66,11 @@ At least PHP 5.3.0 is required to use this plugin.
 It is recommended that you install the pecl_http PHP extension (http://pecl.php.net/package/pecl_http). The plugin will work without it, but only with a simplified, inaccurate content negotiation. If you use pecl_http, it must be at least version 0.19.0.
 
 == Changelog ==
+
+= 0.4 =
+
+* add Access-Control-Allow-Origin header to allow linked data clients to fetch the data
+* Link to https://solid.community to get a WebID
 
 = 0.3 =
 * choose between locally hosted WebID and custom WebID

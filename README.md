@@ -49,7 +49,7 @@ You can choose, where your WebID is hosted:
 
 Whatever option you choose, your wordpress account will always be identified as "http://[your-domain]\>/author/[your-username]>#account". The option only affects, how you, as a person, will be identified.
 
-If you do not have a WebID yet, choose the first option, or get a WebID at http://my-profile.eu. More Information about WebID: http://webid.info/
+If you do not have a WebID yet, choose the first option, or get a WebID at https://solid.community. More Information about WebID: http://webid.info/
 
 
 #### RSA Public Key
@@ -66,11 +66,16 @@ Please contact me for any questions & feedback: [angelo.veltens@online.de](mailt
 
 ## Release Notes
 
-Version 0.1
+Version 0.4
 
-- puplishing blog post metadata as linked data
-- publishing FOAF profiles for blog authors
-- content negotiation supporting Turtle and RDF/XML format
+- add Access-Control-Allow-Origin header to allow linked data clients to fetch the data
+- Link to https://solid.community to get a WebID
+
+Version 0.3
+
+- choose between locally hosted WebID and custom WebID
+- add RSA public key to your profile
+- add custom RDF triples to your profile document
 
 Version 0.2
 
@@ -79,11 +84,11 @@ Version 0.2
 - replaced inexistent dc:content by sioc:content (plain text) for blog post content
 - added sioc:Weblog resource for the blog itself
 
-Version 0.3
+Version 0.1
 
-- choose between locally hosted WebID and custom WebID
-- add RSA public key to your profile
-- add custom RDF triples to your profile document
+- puplishing blog post metadata as linked data
+- publishing FOAF profiles for blog authors
+- content negotiation supporting Turtle and RDF/XML format
 
 ## License
 
