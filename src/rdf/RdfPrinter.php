@@ -14,6 +14,7 @@ class RdfPrinter {
      */
     public function printGraph ($graph, $rdf_format) {
         $this->addContentTypeHeader ($rdf_format);
+        $this->allowCors();
         $data = $graph->serialise ($rdf_format);
         if (!is_scalar ($data)) {
             $data = var_export ($data, true);
@@ -24,6 +25,11 @@ class RdfPrinter {
     private function addContentTypeHeader ($rdfFormat) {
         $mimeType = RdfType::getMimeType($rdfFormat);
         header ('Content-Type: ' . $mimeType);
+    }
+
+    // Linked data should be allowed to fetched from all origins
+    private function allowCors() {
+        header ('Access-Control-Allow-Origin: ' . '*');
     }
 
 }
