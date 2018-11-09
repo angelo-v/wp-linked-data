@@ -114,7 +114,7 @@ class RdfBuilderTest extends TestCase {
 
     public function testBuildGraphForUserWithCustomWebId () {
 
-        $webIdService = $this->getMock ('WebIdService', array('getWebIdOf', 'getAccountUri', 'getRsaPublicKey'));
+        $webIdService = $this->createMock(WebIdService::class);
 
         $webIdService->expects ($this->once ())
             ->method ('getWebIdOf')
@@ -145,7 +145,7 @@ class RdfBuilderTest extends TestCase {
     }
 
     public function testBuildGraphForUserWithRsaPublicKey () {
-        $webIdService = $this->getMock ('WebIdService', array('getWebIdOf', 'getAccountUri', 'getRsaPublicKey'));
+        $webIdService = $this->createMock(WebIdService::class);
 
         $webIdService->expects ($this->once ())
             ->method ('getWebIdOf')
@@ -177,7 +177,7 @@ class RdfBuilderTest extends TestCase {
     }
 
     public function testBuildGraphForUserWithAdditionalRdf () {
-        $webIdService = $this->getMock ('WebIdService', array('getWebIdOf', 'getAccountUri', 'getRsaPublicKey'));
+        $webIdService = $this->createMock(WebIdService::class);
 
         $webIdService->expects ($this->once ())
             ->method ('getWebIdOf')

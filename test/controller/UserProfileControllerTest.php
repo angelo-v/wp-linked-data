@@ -24,6 +24,8 @@ function wp_die ($message) {
 class UserProfileControllerTest extends TestCase {
 
     protected function setUp () {
+        global $saved_meta_data;
+        $saved_meta_data = array();
         $_POST['webIdLocation'] = '';
         $_POST['webId'] = '';
         $_POST['publicKeyModulus'] = '';
