@@ -2,6 +2,8 @@
 
 namespace org\desone\wordpress\wpLinkedData;
 
+use PHPUnit\Framework\TestCase;
+
 require_once 'test/mock/mock_plugin_dir_path.php';
 require_once 'src/request/PeclHttpContentNegotiation.php';
 
@@ -19,7 +21,7 @@ function http_negotiate_content_type ($supported_types, &$results) {
     return 'unexpected supported types';
 }
 
-class PeclHttpContentNegotiationTest extends \PHPUnit_Framework_TestCase {
+class PeclHttpContentNegotiationTest extends TestCase {
 
     public function testNegotiateRdfXml () {
         global $mocked_http_negotiate_content_type_result;

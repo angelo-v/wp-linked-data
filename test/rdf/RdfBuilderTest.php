@@ -2,6 +2,8 @@
 
 namespace org\desone\wordpress\wpLinkedData;
 
+use PHPUnit\Framework\TestCase;
+
 require_once 'test/mock/mock_plugin_dir_path.php';
 require_once 'test/mock/WP_Query.php';
 require_once 'test/mock/WP_Post.php';
@@ -30,7 +32,7 @@ function get_bloginfo ($show) {
     return null;
 }
 
-class RdfBuilderTest extends \PHPUnit_Framework_TestCase {
+class RdfBuilderTest extends TestCase {
 
     public function testBuildGraphForPost () {
 

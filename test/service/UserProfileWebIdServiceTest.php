@@ -2,6 +2,8 @@
 
 namespace org\desone\wordpress\wpLinkedData;
 
+use PHPUnit\Framework\TestCase;
+
 require_once 'test/mock/mock_plugin_dir_path.php';
 require_once 'test/mock/WP_User.php';
 require_once 'src/service/UserProfileWebIdService.php';
@@ -41,7 +43,7 @@ function setMockedMetaData ($userId, $dataArray) {
 }
 
 
-class UserProfileWebIdServiceTest extends \PHPUnit_Framework_TestCase {
+class UserProfileWebIdServiceTest extends TestCase {
 
     public function testHasUserCustomWebIdForUserWithCustomWebId () {
         $service = new UserProfileWebIdService();
