@@ -2,6 +2,8 @@
 
 namespace org\desone\wordpress\wpLinkedData;
 
+use PHPUnit\Framework\TestCase;
+
 require_once 'test/mock/mock_plugin_dir_path.php';
 require_once 'test/mock/WP_User.php';
 require_once 'src/service/UserProfileWebIdService.php';
@@ -18,18 +20,6 @@ function get_author_posts_url ($id) {
     return 'http://example.com/author/' . $id;
 }
 
-$mockedMetaData = array(
-    1 => array(
-        'webIdLocation' => WebIdService::CUSTOM_WEB_ID,
-        'webId' => 'http://custom.webid.example#me'
-    ),
-    2 => array(
-        'webIdLocation' => WebIdService::LOCAL_WEB_ID,
-        'webId' => '',
-        'additionalRdf' => ''
-    )
-);
-
 function get_the_author_meta ($field, $userId) {
     global $mockedMetaData;
     return $mockedMetaData[$userId][$field];
@@ -41,7 +31,22 @@ function setMockedMetaData ($userId, $dataArray) {
 }
 
 
-class UserProfileWebIdServiceTest extends \PHPUnit_Framework_TestCase {
+class UserProfileWebIdServiceTest extends TestCase {
+
+    protected function setUp () {
+        global $mockedMetaData;
+        $mockedMetaData = array(
+            1 => array(
+                'webIdLocation' => WebIdService::CUSTOM_WEB_ID,
+                'webId' => 'http://custom.webid.example#me'
+            ),
+            2 => array(
+                'webIdLocation' => WebIdService::LOCAL_WEB_ID,
+                'webId' => '',
+                'additionalRdf' => ''
+            )
+        );
+    }
 
     public function testHasUserCustomWebIdForUserWithCustomWebId () {
         $service = new UserProfileWebIdService();

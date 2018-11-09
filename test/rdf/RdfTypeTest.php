@@ -2,10 +2,12 @@
 
 namespace org\desone\wordpress\wpLinkedData;
 
+use PHPUnit\Framework\TestCase;
+
 require_once 'test/mock/mock_plugin_dir_path.php';
 require_once 'src/rdf/RdfType.php';
 
-class RdfTypeTest extends \PHPUnit_Framework_TestCase {
+class RdfTypeTest extends TestCase {
 
     public function testGetMimeTypeRdfXml () {
         $this->assertEquals ('application/rdf+xml', RdfType::getMimeType(RdfType::RDF_XML));

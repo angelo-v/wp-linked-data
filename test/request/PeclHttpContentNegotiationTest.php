@@ -2,6 +2,8 @@
 
 namespace org\desone\wordpress\wpLinkedData;
 
+use PHPUnit\Framework\TestCase;
+
 require_once 'test/mock/mock_plugin_dir_path.php';
 require_once 'src/request/PeclHttpContentNegotiation.php';
 
@@ -9,17 +11,17 @@ $mocked_http_negotiate_content_type_result = null;
 
 function http_negotiate_content_type ($supported_types, &$results) {
     global $mocked_http_negotiate_content_type_result;
-    if ($supported_types == array('application/rdf+xml', 'text/turtle')) {
-        if ($mocked_http_negotiate_content_type_result != null) {
-            array_push($results, $mocked_http_negotiate_content_type_result);
-            return $mocked_http_negotiate_content_type_result;
-        }
-        return 'application/rdf+xml';
+    if ($supported_types != array('application/rdf+xml', 'text/turtle')) {
+        return 'unexpected supported types';
     }
-    return 'unexpected supported types';
+    if ($mocked_http_negotiate_content_type_result != null) {
+        array_push($results, $mocked_http_negotiate_content_type_result);
+        return $mocked_http_negotiate_content_type_result;
+    }
+    return 'application/rdf+xml';
 }
 
-class PeclHttpContentNegotiationTest extends \PHPUnit_Framework_TestCase {
+class PeclHttpContentNegotiationTest extends TestCase {
 
     public function testNegotiateRdfXml () {
         global $mocked_http_negotiate_content_type_result;
@@ -30,6 +32,8 @@ class PeclHttpContentNegotiationTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testReturnNullIfNegotiationDidNotReturnResults () {
+        global $mocked_http_negotiate_content_type_result;
+        $mocked_http_negotiate_content_type_result = null;
         $contentNegotiation = new PeclHttpContentNegotiation();
         $type = $contentNegotiation->negotiateRdfContentType('text/html');
         $this->assertNull ($type);

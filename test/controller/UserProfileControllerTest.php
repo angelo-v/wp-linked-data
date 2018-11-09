@@ -2,6 +2,8 @@
 
 namespace org\desone\wordpress\wpLinkedData;
 
+use PHPUnit\Framework\TestCase;
+
 require_once 'test/mock/mock_plugin_dir_path.php';
 require_once 'src/controller/UserProfileController.php';
 
@@ -19,9 +21,11 @@ function update_user_meta ($userId, $field, $value) {
 function wp_die ($message) {
 }
 
-class UserProfileControllerTest extends \PHPUnit_Framework_TestCase {
+class UserProfileControllerTest extends TestCase {
 
     protected function setUp () {
+        global $saved_meta_data;
+        $saved_meta_data = array();
         $_POST['webIdLocation'] = '';
         $_POST['webId'] = '';
         $_POST['publicKeyModulus'] = '';
