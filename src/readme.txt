@@ -3,7 +3,7 @@ Contributors: aveltens
 Author URI: https://datenwissen.de/
 Tags: linked data, rdf, semantic web, webid
 Requires at least: 3.5.1
-Tested up to: 4.9.8
+Tested up to: 5.0 
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0
