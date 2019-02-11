@@ -6,7 +6,12 @@ jobs:
       - image: phpunit/phpunit
     steps:
       - checkout
-      - run: phpunit test
+      - run: mkdir -p ~/phpunit
+      - run: phpunit test --log-junit ~/phpunit/test-results.xml
+      - store_test_results:
+          path: ~/phpunit
+      - store_artifacts:
+          path: ~/phpunit
 
 workflows:
   version: 2
