@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2011 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +31,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2011 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 
@@ -41,18 +40,18 @@
  * Static class to set the HTTP client used by EasyRdf
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2011 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Http
 {
     /** The default HTTP Client object */
-    private static $_defaultHttpClient = null;
+    private static $defaultHttpClient = null;
 
     /** Set the HTTP Client object used to fetch RDF data
      *
-     * @param  object mixed $httpClient The new HTTP client object
-     * @return object mixed The new HTTP client object
+     * @param  EasyRdf_Http_Client|Zend_Http_Client $httpClient The new HTTP client object
+     * @return EasyRdf_Http_Client|Zend_Http_Client The new HTTP client object
      */
     public static function setDefaultHttpClient($httpClient)
     {
@@ -63,7 +62,7 @@ class EasyRdf_Http
                 "\$httpClient should be an object of class Zend_Http_Client or EasyRdf_Http_Client"
             );
         }
-        return self::$_defaultHttpClient = $httpClient;
+        return self::$defaultHttpClient = $httpClient;
     }
 
     /** Get the HTTP Client object used to fetch RDF data
@@ -71,13 +70,13 @@ class EasyRdf_Http
      * If no HTTP Client has previously been set, then a new
      * default (EasyRdf_Http_Client) client will be created.
      *
-     * @return object mixed The HTTP client object
+     * @return EasyRdf_Http_Client|Zend_Http_Client The HTTP client object
      */
     public static function getDefaultHttpClient()
     {
-        if (!isset(self::$_defaultHttpClient))
-            self::$_defaultHttpClient = new EasyRdf_Http_Client();
-        return self::$_defaultHttpClient;
+        if (!isset(self::$defaultHttpClient)) {
+            self::$defaultHttpClient = new EasyRdf_Http_Client();
+        }
+        return self::$defaultHttpClient;
     }
-
 }

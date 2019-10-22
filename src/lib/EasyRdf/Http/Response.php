@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2010 Nicholas J Humfrey.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.
  * Copyright (c) 2005-2009 Zend Technologies USA Inc.
  * All rights reserved.
  *
@@ -33,17 +33,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2010 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @copyright  Copyright (c) 2005-2009 Zend Technologies USA Inc.
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
  * Class that represents an HTTP 1.0 / 1.1 response message.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2010 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  *             Copyright (c) 2005-2009 Zend Technologies USA Inc.
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
@@ -55,7 +54,7 @@ class EasyRdf_Http_Response
      *
      * @var int
      */
-    private $_status;
+    private $status;
 
     /**
      * The HTTP response code as string
@@ -63,21 +62,21 @@ class EasyRdf_Http_Response
      *
      * @var string
      */
-    private $_message;
+    private $message;
 
     /**
      * The HTTP response headers array
      *
      * @var array
      */
-    private $_headers = array();
+    private $headers = array();
 
     /**
      * The HTTP response body
      *
      * @var string
      */
-    private $_body;
+    private $body;
 
     /**
      * Constructor.
@@ -90,18 +89,20 @@ class EasyRdf_Http_Response
      * @return object  EasyRdf_Http_Response
      */
     public function __construct(
-        $status, $headers, $body = null,
-        $version = '1.1', $message = null
-    )
-    {
-        $this->_status = intval($status);
-        $this->_body = $body;
-        $this->_version = $version;
-        $this->_message = $message;
+        $status,
+        $headers,
+        $body = null,
+        $version = '1.1',
+        $message = null
+    ) {
+        $this->status = intval($status);
+        $this->body = $body;
+        $this->version = $version;
+        $this->message = $message;
 
         foreach ($headers as $k => $v) {
             $k = ucwords(strtolower($k));
-            $this->_headers[$k] = $v;
+            $this->headers[$k] = $v;
         }
     }
 
@@ -112,7 +113,7 @@ class EasyRdf_Http_Response
      */
     public function isSuccessful()
     {
-        return ($this->_status >= 200 && $this->_status < 300);
+        return ($this->status >= 200 && $this->status < 300);
     }
 
     /**
@@ -122,7 +123,7 @@ class EasyRdf_Http_Response
      */
     public function isError()
     {
-        return ($this->_status >= 400 && $this->_status < 600);
+        return ($this->status >= 400 && $this->status < 600);
     }
 
     /**
@@ -132,7 +133,7 @@ class EasyRdf_Http_Response
      */
     public function isRedirect()
     {
-        return ($this->_status >= 300 && $this->_status < 400);
+        return ($this->status >= 300 && $this->status < 400);
     }
 
     /**
@@ -142,7 +143,7 @@ class EasyRdf_Http_Response
      */
     public function getStatus()
     {
-        return $this->_status;
+        return $this->status;
     }
 
     /**
@@ -153,7 +154,7 @@ class EasyRdf_Http_Response
      */
     public function getMessage()
     {
-        return $this->_message;
+        return $this->message;
     }
 
     /**
@@ -167,13 +168,13 @@ class EasyRdf_Http_Response
         switch (strtolower($this->getHeader('transfer-encoding'))) {
             // Handle chunked body
             case 'chunked':
-                return self::decodeChunkedBody($this->_body);
+                return self::decodeChunkedBody($this->body);
                 break;
 
             // No transfer encoding, or unknown encoding extension:
             // return body as is
             default:
-                return $this->_body;
+                return $this->body;
                 break;
         }
     }
@@ -188,7 +189,7 @@ class EasyRdf_Http_Response
      */
     public function getRawBody()
     {
-        return $this->_body;
+        return $this->body;
     }
 
     /**
@@ -198,7 +199,7 @@ class EasyRdf_Http_Response
      */
     public function getVersion()
     {
-        return $this->_version;
+        return $this->version;
     }
 
     /**
@@ -208,7 +209,7 @@ class EasyRdf_Http_Response
      */
     public function getHeaders()
     {
-        return $this->_headers;
+        return $this->headers;
     }
 
     /**
@@ -220,8 +221,8 @@ class EasyRdf_Http_Response
     public function getHeader($header)
     {
         $header = ucwords(strtolower($header));
-        if (array_key_exists($header, $this->_headers)) {
-            return $this->_headers[$header];
+        if (array_key_exists($header, $this->headers)) {
+            return $this->headers[$header];
         } else {
             return null;
         }
@@ -230,8 +231,8 @@ class EasyRdf_Http_Response
     /**
      * Get all headers as string
      *
-     * @param boolean $status_line Whether to return the first status line (IE "HTTP 200 OK")
-     * @param string $br Line breaks (eg. "\n", "\r\n", "<br />")
+     * @param boolean $statusLine Whether to return the first status line (ie "HTTP 200 OK")
+     * @param string  $br         Line breaks (eg. "\n", "\r\n", "<br />")
      * @return string
      */
     public function getHeadersAsString($statusLine = true, $br = "\n")
@@ -239,15 +240,14 @@ class EasyRdf_Http_Response
         $str = '';
 
         if ($statusLine) {
-            $str = "HTTP/{$this->_version} {$this->_status} {$this->_message}{$br}";
+            $str = "HTTP/{$this->version} {$this->status} {$this->message}{$br}";
         }
 
         // Iterate over the headers and stringify them
-        foreach ($this->_headers as $name => $value) {
-            if (is_string($value))
+        foreach ($this->headers as $name => $value) {
+            if (is_string($value)) {
                 $str .= "{$name}: {$value}{$br}";
-
-            elseif (is_array($value)) {
+            } elseif (is_array($value)) {
                 foreach ($value as $subval) {
                     $str .= "{$name}: {$subval}{$br}";
                 }
@@ -306,9 +306,7 @@ class EasyRdf_Http_Response
             }
         }
 
-        return new EasyRdf_Http_Response(
-            $status, $headers, $body, $version, $message
-        );
+        return new EasyRdf_Http_Response($status, $headers, $body, $version, $message);
     }
 
 
@@ -323,7 +321,7 @@ class EasyRdf_Http_Response
         $decBody = '';
 
         while (trim($body)) {
-            if (preg_match("/^([\da-fA-F]+)[^\r\n]*\r\n/sm", $body, $m)) {
+            if (preg_match('/^([\da-fA-F]+)[^\r\n]*\r\n/sm', $body, $m)) {
                 $length = hexdec(trim($m[1]));
                 $cut = strlen($m[0]);
                 $decBody .= substr($body, $cut, $length);
@@ -359,5 +357,4 @@ class EasyRdf_Http_Response
     {
         return $this->asString();
     }
-
 }

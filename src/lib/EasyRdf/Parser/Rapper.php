@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,21 +31,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
  * Class to parse RDF using the 'rapper' command line tool.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Parser_Rapper extends EasyRdf_Parser_Json
 {
-    private $_rapperCmd = null;
+    private $rapperCmd = null;
 
     const MINIMUM_RAPPER_VERSION = '1.4.17';
 
@@ -55,19 +54,19 @@ class EasyRdf_Parser_Rapper extends EasyRdf_Parser_Json
      * @param string $rapperCmd Optional path to the rapper command to use.
      * @return object EasyRdf_Parser_Rapper
      */
-    public function __construct($rapperCmd='rapper')
+    public function __construct($rapperCmd = 'rapper')
     {
         $result = exec("$rapperCmd --version 2>/dev/null", $output, $status);
         if ($status != 0) {
             throw new EasyRdf_Exception(
                 "Failed to execute the command '$rapperCmd': $result"
             );
-        } else if (version_compare($result, self::MINIMUM_RAPPER_VERSION) < 0) {
+        } elseif (version_compare($result, self::MINIMUM_RAPPER_VERSION) < 0) {
             throw new EasyRdf_Exception(
                 "Version ".self::MINIMUM_RAPPER_VERSION." or higher of rapper is required."
             );
         } else {
-            $this->_rapperCmd = $rapperCmd;
+            $this->rapperCmd = $rapperCmd;
         }
     }
 
@@ -85,7 +84,7 @@ class EasyRdf_Parser_Rapper extends EasyRdf_Parser_Json
         parent::checkParseParams($graph, $data, $format, $baseUri);
 
         $json = EasyRdf_Utils::execCommandPipe(
-            $this->_rapperCmd,
+            $this->rapperCmd,
             array(
                 '--quiet',
                 '--input', $format,

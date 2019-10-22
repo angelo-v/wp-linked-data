@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  * Copyright (c) 2005-2009 Zend Technologies USA Inc.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -32,10 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  *             Copyright (c) 2005-2009 Zend Technologies USA Inc.
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -44,7 +43,7 @@
  * implementation try Zend_Http_Client.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Http_Client
@@ -54,7 +53,7 @@ class EasyRdf_Http_Client
      *
      * @var array
      */
-    private $_config = array(
+    private $config = array(
         'maxredirects'    => 5,
         'useragent'       => 'EasyRdf_Http_Client',
         'timeout'         => 10
@@ -65,42 +64,42 @@ class EasyRdf_Http_Client
      *
      * @var string
      */
-    private $_uri = null;
+    private $uri = null;
 
     /**
      * Associative array of request headers
      *
      * @var array
      */
-    private $_headers = array();
+    private $headers = array();
 
     /**
      * HTTP request method
      *
      * @var string
      */
-    private $_method = 'GET';
+    private $method = 'GET';
 
     /**
      * Associative array of GET parameters
      *
      * @var array
      */
-    private $_paramsGet = array();
+    private $paramsGet = array();
 
     /**
      * The raw post data to send. Could be set by setRawData($data).
      *
      * @var string
      */
-    private $_rawPostData = null;
+    private $rawPostData = null;
 
     /**
      * Redirection counter
      *
      * @var int
      */
-    private $_redirectCounter = 0;
+    private $redirectCounter = 0;
 
     /**
      * Constructor method. Will create a new HTTP client. Accepts the target
@@ -137,7 +136,7 @@ class EasyRdf_Http_Client
             );
         }
 
-        $this->_uri = $uri;
+        $this->uri = $uri;
 
         return $this;
     }
@@ -149,7 +148,7 @@ class EasyRdf_Http_Client
      */
     public function getUri($asString = true)
     {
-        return $this->_uri;
+        return $this->uri;
     }
 
     /**
@@ -168,7 +167,7 @@ class EasyRdf_Http_Client
         }
 
         foreach ($config as $k => $v) {
-            $this->_config[strtolower($k)] = $v;
+            $this->config[strtolower($k)] = $v;
         }
 
         return $this;
@@ -187,11 +186,10 @@ class EasyRdf_Http_Client
 
         // If $value is null or false, unset the header
         if ($value === null || $value === false) {
-            unset($this->_headers[$normalizedName]);
-
-        // Else, set the header
+            unset($this->headers[$normalizedName]);
         } else {
-            $this->_headers[$normalizedName] = array($name, $value);
+            // Else, set the header
+            $this->headers[$normalizedName] = array($name, $value);
         }
 
         return $this;
@@ -212,7 +210,7 @@ class EasyRdf_Http_Client
             throw new InvalidArgumentException("Invalid HTTP request method.");
         }
 
-        $this->_method = $method;
+        $this->method = $method;
 
         return $this;
     }
@@ -224,7 +222,7 @@ class EasyRdf_Http_Client
      */
     public function getMethod()
     {
-        return $this->_method;
+        return $this->method;
     }
 
     /**
@@ -239,8 +237,8 @@ class EasyRdf_Http_Client
     public function getHeader($key)
     {
         $key = strtolower($key);
-        if (isset($this->_headers[$key])) {
-            return $this->_headers[$key][1];
+        if (isset($this->headers[$key])) {
+            return $this->headers[$key][1];
         } else {
             return null;
         }
@@ -256,10 +254,11 @@ class EasyRdf_Http_Client
     public function setParameterGet($name, $value = null)
     {
         if ($value === null) {
-            if (isset($this->_paramsGet[$name]))
-                unset($this->_paramsGet[$name]);
+            if (isset($this->paramsGet[$name])) {
+                unset($this->paramsGet[$name]);
+            }
         } else {
-            $this->_paramsGet[$name] = $value;
+            $this->paramsGet[$name] = $value;
         }
 
         return $this;
@@ -273,8 +272,8 @@ class EasyRdf_Http_Client
      */
     public function getParameterGet($name)
     {
-        if (isset($this->_paramsGet[$name])) {
-            return $this->_paramsGet[$name];
+        if (isset($this->paramsGet[$name])) {
+            return $this->paramsGet[$name];
         } else {
             return null;
         }
@@ -287,7 +286,7 @@ class EasyRdf_Http_Client
      */
     public function getParametersGet()
     {
-        return $this->_paramsGet;
+        return $this->paramsGet;
     }
 
     /**
@@ -297,7 +296,7 @@ class EasyRdf_Http_Client
      */
     public function getRedirectionsCount()
     {
-        return $this->_redirectCounter;
+        return $this->redirectCounter;
     }
 
     /**
@@ -315,7 +314,7 @@ class EasyRdf_Http_Client
      */
     public function setRawData($data)
     {
-        $this->_rawPostData = $data;
+        $this->rawPostData = $data;
         return $this;
     }
 
@@ -326,7 +325,7 @@ class EasyRdf_Http_Client
      */
     public function getRawData()
     {
-        return $this->_rawPostData;
+        return $this->rawPostData;
     }
 
     /**
@@ -344,19 +343,19 @@ class EasyRdf_Http_Client
     public function resetParameters($clearAll = false)
     {
         // Reset parameter data
-        $this->_paramsGet   = array();
-        $this->_rawPostData = null;
-        $this->_method      = 'GET';
+        $this->paramsGet   = array();
+        $this->rawPostData = null;
+        $this->method      = 'GET';
 
         if ($clearAll) {
-            $this->_headers = array();
+            $this->headers = array();
         } else {
             // Clear outdated headers
-            if (isset($this->_headers['content-type'])) {
-                unset($this->_headers['content-type']);
+            if (isset($this->headers['content-type'])) {
+                unset($this->headers['content-type']);
             }
-            if (isset($this->_headers['content-length'])) {
-                unset($this->_headers['content-length']);
+            if (isset($this->headers['content-length'])) {
+                unset($this->headers['content-length']);
             }
         }
 
@@ -371,7 +370,7 @@ class EasyRdf_Http_Client
      */
     public function request($method = null)
     {
-        if (!$this->_uri) {
+        if (!$this->uri) {
             throw new EasyRdf_Exception(
                 "Set URI before calling EasyRdf_Http_Client->request()"
             );
@@ -380,16 +379,16 @@ class EasyRdf_Http_Client
         if ($method) {
             $this->setMethod($method);
         }
-        $this->_redirectCounter = 0;
+        $this->redirectCounter = 0;
         $response = null;
 
         // Send the first request. If redirected, continue.
         do {
             // Clone the URI and add the additional GET parameters to it
-            $uri = parse_url($this->_uri);
+            $uri = parse_url($this->uri);
             if ($uri['scheme'] === 'http') {
                 $host = $uri['host'];
-            } else if ($uri['scheme'] === 'https') {
+            } elseif ($uri['scheme'] === 'https') {
                 $host = 'ssl://'.$uri['host'];
             } else {
                 throw new EasyRdf_Exception(
@@ -407,44 +406,56 @@ class EasyRdf_Http_Client
                 }
             }
 
-            if (!empty($this->_paramsGet)) {
+            if (!empty($this->paramsGet)) {
                 if (!empty($uri['query'])) {
                     $uri['query'] .= '&';
                 } else {
                     $uri['query'] = '';
                 }
-                $uri['query'] .= http_build_query($this->_paramsGet, null, '&');
+                $uri['query'] .= http_build_query($this->paramsGet, null, '&');
             }
 
-            $headers = $this->_prepareHeaders($uri['host'], $port);
+            $headers = $this->prepareHeaders($uri['host'], $port);
 
             // Open socket to remote server
-            $socket = @fsockopen(
-                $host, $port, $errno, $errstr, $this->_config['timeout']
-            );
+            $socket = @fsockopen($host, $port, $errno, $errstr, $this->config['timeout']);
             if (!$socket) {
                 throw new EasyRdf_Exception("Unable to connect to $host:$port ($errstr)");
             }
+            stream_set_timeout($socket, $this->config['timeout']);
+            $info = stream_get_meta_data($socket);
 
             // Write the request
             $path = $uri['path'];
-            if (isset($uri['query'])) $path .= '?' . $uri['query'];
-            fwrite($socket, "{$this->_method} {$path} HTTP/1.1\r\n");
+            if (empty($path)) {
+                $path = '/';
+            }
+            if (isset($uri['query'])) {
+                $path .= '?' . $uri['query'];
+            }
+            fwrite($socket, "{$this->method} {$path} HTTP/1.1\r\n");
             foreach ($headers as $k => $v) {
-                if (is_string($k)) $v = ucfirst($k) . ": $v";
+                if (is_string($k)) {
+                    $v = ucfirst($k) . ": $v";
+                }
                 fwrite($socket, "$v\r\n");
             }
             fwrite($socket, "\r\n");
 
             // Send the request body, if there is one set
-            if (isset($this->_rawPostData)) {
-                fwrite($socket, $this->_rawPostData);
+            if (isset($this->rawPostData)) {
+                fwrite($socket, $this->rawPostData);
             }
 
             // Read in the response
             $content = '';
-            while (!feof($socket)) {
+            while (!feof($socket) && !$info['timed_out']) {
                 $content .= fgets($socket);
+                $info = stream_get_meta_data($socket);
+            }
+
+            if ($info['timed_out']) {
+                throw new EasyRdf_Exception("Request to $host:$port timed out");
             }
 
             // FIXME: support HTTP/1.1 100 Continue
@@ -466,7 +477,7 @@ class EasyRdf_Http_Client
 
                 // Some servers return relative URLs in the location header
                 // resolve it in relation to previous request
-                $baseUri = new EasyRdf_ParsedUri($this->_uri);
+                $baseUri = new EasyRdf_ParsedUri($this->uri);
                 $location = $baseUri->resolve($location)->toString();
 
                 // If it is a 303 then drop the parameters and send a GET request
@@ -482,10 +493,10 @@ class EasyRdf_Http_Client
                 } else {
                     throw new EasyRdf_Exception(
                         "Failed to parse Location header returned by ".
-                        $this->_uri
+                        $this->uri
                     );
                 }
-                ++$this->_redirectCounter;
+                ++$this->redirectCounter;
 
             } else {
                 // If we didn't get any location, stop redirecting
@@ -493,7 +504,7 @@ class EasyRdf_Http_Client
             }
 
 
-        } while ($this->_redirectCounter < $this->_config['maxredirects']);
+        } while ($this->redirectCounter < $this->config['maxredirects']);
 
         return $response;
     }
@@ -504,12 +515,12 @@ class EasyRdf_Http_Client
      * @ignore
      * @return array
      */
-    protected function _prepareHeaders($host, $port)
+    protected function prepareHeaders($host, $port)
     {
         $headers = array();
 
         // Set the host header
-        if (! isset($this->_headers['host'])) {
+        if (! isset($this->headers['host'])) {
             // If the port is not default, add it
             if ($port !== 80 and $port !== 443) {
                 $host .= ':' . $port;
@@ -518,22 +529,22 @@ class EasyRdf_Http_Client
         }
 
         // Set the connection header
-        if (! isset($this->_headers['connection'])) {
+        if (! isset($this->headers['connection'])) {
             $headers[] = "Connection: close";
         }
 
         // Set the user agent header
-        if (! isset($this->_headers['user-agent'])) {
-            $headers[] = "User-Agent: {$this->_config['useragent']}";
+        if (! isset($this->headers['user-agent'])) {
+            $headers[] = "User-Agent: {$this->config['useragent']}";
         }
 
-        // If we have _rawPostData set, set the content-length header
-        if (isset($this->_rawPostData)) {
-            $headers[] = "Content-Length: ".strlen($this->_rawPostData);
+        // If we have rawPostData set, set the content-length header
+        if (isset($this->rawPostData)) {
+            $headers[] = "Content-Length: ".strlen($this->rawPostData);
         }
 
         // Add all other user defined headers
-        foreach ($this->_headers as $header) {
+        foreach ($this->headers as $header) {
             list($name, $value) = $header;
             if (is_array($value)) {
                 $value = implode(', ', $value);

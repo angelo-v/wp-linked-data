@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,22 +31,21 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
  * Class to parse RDF using Redland (librdf) C library.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Parser_Redland extends EasyRdf_Parser
 {
     /** Variable set to the librdf world */
-    private $_world = null;
+    private $world = null;
 
     /** Parser feature URI string for getting the error count of last parse. */
     const LIBRDF_PARSER_FEATURE_ERROR_COUNT =
@@ -73,8 +72,7 @@ class EasyRdf_Parser_Redland extends EasyRdf_Parser
      */
     protected function nodeTypeString($node)
     {
-        switch(librdf_node_get_type($node))
-        {
+        switch(librdf_node_get_type($node)) {
             case 1:
                 return 'uri';
                 break;
@@ -109,7 +107,7 @@ class EasyRdf_Parser_Redland extends EasyRdf_Parser
                 );
             }
             return $str;
-        } else if ($type == 'bnode') {
+        } elseif ($type == 'bnode') {
             return $this->remapBnode(
                 librdf_node_get_blank_identifier($node)
             );
@@ -122,15 +120,15 @@ class EasyRdf_Parser_Redland extends EasyRdf_Parser
      * Convert a node into an associate array
      * @ignore
      */
-    protected function nodeToArray($node)
+    protected function nodeToRdfPhp($node)
     {
         $object = array();
         $object['type'] = EasyRdf_Parser_Redland::nodeTypeString($node);
         if ($object['type'] == 'uri') {
             $object['value'] = EasyRdf_Parser_Redland::nodeUriString($node);
-        } else if ($object['type'] == 'bnode') {
+        } elseif ($object['type'] == 'bnode') {
             $object['value'] = '_:'.librdf_node_get_blank_identifier($node);
-        } else if ($object['type'] == 'literal') {
+        } elseif ($object['type'] == 'literal') {
             $object['value'] = librdf_node_get_literal_value($node);
             $lang = librdf_node_get_literal_value_language($node);
             if ($lang) {
@@ -153,7 +151,8 @@ class EasyRdf_Parser_Redland extends EasyRdf_Parser
     protected function parserErrorCount($parser)
     {
         $errorUri = librdf_new_uri(
-            $this->_world, self::LIBRDF_PARSER_FEATURE_ERROR_COUNT
+            $this->world,
+            self::LIBRDF_PARSER_FEATURE_ERROR_COUNT
         );
         $errorNode = librdf_parser_get_feature($parser, $errorUri);
         $errorCount = librdf_node_get_literal_value($errorNode);
@@ -169,8 +168,8 @@ class EasyRdf_Parser_Redland extends EasyRdf_Parser
     public function __construct()
     {
         if (extension_loaded('redland')) {
-            $this->_world = librdf_php_get_world();
-            if (!$this->_world) {
+            $this->world = librdf_php_get_world();
+            if (!$this->world) {
                 throw new EasyRdf_Exception(
                     "Failed to initialise librdf world."
                 );
@@ -195,26 +194,24 @@ class EasyRdf_Parser_Redland extends EasyRdf_Parser
     {
         parent::checkParseParams($graph, $data, $format, $baseUri);
 
-        $parser = librdf_new_parser($this->_world, $format, null, null);
+        $parser = librdf_new_parser($this->world, $format, null, null);
         if (!$parser) {
             throw new EasyRdf_Exception(
                 "Failed to create librdf_parser of type: $format"
             );
         }
 
-        $rdfUri = librdf_new_uri($this->_world, $baseUri);
+        $rdfUri = librdf_new_uri($this->world, $baseUri);
         if (!$rdfUri) {
             throw new EasyRdf_Exception(
                 "Failed to create librdf_uri from: $baseUri"
             );
         }
 
-        $stream = librdf_parser_parse_string_as_stream(
-            $parser, $data, $rdfUri
-        );
+        $stream = librdf_parser_parse_string_as_stream($parser, $data, $rdfUri);
         if (!$stream) {
-            throw new EasyRdf_Exception(
-                "Failed to parse RDF stream for: $rdfUri"
+            throw new EasyRdf_Parser_Exception(
+                "Failed to parse RDF stream"
             );
         }
 
@@ -227,7 +224,7 @@ class EasyRdf_Parser_Redland extends EasyRdf_Parser
                 $predicate = EasyRdf_Parser_Redland::nodeUriString(
                     librdf_statement_get_predicate($statement)
                 );
-                $object = EasyRdf_Parser_Redland::nodeToArray(
+                $object = EasyRdf_Parser_Redland::nodeToRdfPhp(
                     librdf_statement_get_object($statement)
                 );
 
@@ -237,13 +234,13 @@ class EasyRdf_Parser_Redland extends EasyRdf_Parser
 
         $errorCount = $this->parserErrorCount($parser);
         if ($errorCount) {
-            throw new EasyRdf_Exception("$errorCount errors while parsing.");
+            throw new EasyRdf_Parser_Exception("$errorCount errors while parsing.");
         }
 
         librdf_free_uri($rdfUri);
         librdf_free_stream($stream);
         librdf_free_parser($parser);
 
-        return $this->_tripleCount;
+        return $this->tripleCount;
     }
 }

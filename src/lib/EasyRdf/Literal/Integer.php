@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +31,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -41,7 +40,7 @@
  *
  * @package    EasyRdf
  * @link       http://www.w3.org/TR/xmlschema-2/#integer
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Literal_Integer extends EasyRdf_Literal
@@ -53,7 +52,7 @@ class EasyRdf_Literal_Integer extends EasyRdf_Literal
      * @param  string $datatype  Optional datatype (default 'xsd:integer')
      * @return object EasyRdf_Literal_Integer
      */
-    public function __construct($value, $lang=null, $datatype=null)
+    public function __construct($value, $lang = null, $datatype = null)
     {
         parent::__construct($value, null, $datatype);
     }
@@ -64,8 +63,6 @@ class EasyRdf_Literal_Integer extends EasyRdf_Literal
      */
     public function getValue()
     {
-        return (int)$this->_value;
+        return (int)$this->value;
     }
 }
-
-EasyRdf_Literal::setDatatypeMapping('xsd:integer', 'EasyRdf_Literal_Integer');

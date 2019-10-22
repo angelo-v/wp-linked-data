@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2010 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,9 +31,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2010 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -41,7 +40,7 @@
  * with no external dependancies.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2010 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Serialiser_RdfPhp extends EasyRdf_Serialiser
@@ -50,12 +49,15 @@ class EasyRdf_Serialiser_RdfPhp extends EasyRdf_Serialiser
      * Method to serialise an EasyRdf_Graph to RDF/PHP
      *
      * http://n2.talis.com/wiki/RDF_PHP_Specification
+     * docs/appendix-a-rdf-formats-php.md
      *
-     * @param object EasyRdf_Graph $graph   An EasyRdf_Graph object.
-     * @param string  $format               The name of the format to convert to.
-     * @return string                       The RDF in the new desired format.
+     * @param EasyRdf_Graph $graph   An EasyRdf_Graph object.
+     * @param string        $format  The name of the format to convert to.
+     * @param array         $options
+     * @throws EasyRdf_Exception
+     * @return string The RDF in the new desired format.
      */
-    public function serialise($graph, $format)
+    public function serialise($graph, $format, array $options = array())
     {
         parent::checkSerialiseParams($graph, $format);
 
@@ -65,7 +67,7 @@ class EasyRdf_Serialiser_RdfPhp extends EasyRdf_Serialiser
             );
         }
 
-        // Graph is already stored an RDF/PHP resource-centric array internally within the EasyRdf_Graph object
-        return $graph->toArray();
+        // Graph is already stored as RDF/PHP resource-centric array internally within the EasyRdf_Graph object
+        return $graph->toRdfPhp();
     }
 }

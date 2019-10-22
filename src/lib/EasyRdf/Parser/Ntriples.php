@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,16 +31,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
  * A pure-php class to parse N-Triples with no dependancies.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Parser_Ntriples extends EasyRdf_Parser
@@ -54,8 +53,9 @@ class EasyRdf_Parser_Ntriples extends EasyRdf_Parser
      **/
     protected function unescapeString($str)
     {
-        if (strpos($str, '\\') === FALSE)
+        if (strpos($str, '\\') === false) {
             return $str;
+        }
 
         $mappings = array(
             't' => chr(0x09),
@@ -70,28 +70,31 @@ class EasyRdf_Parser_Ntriples extends EasyRdf_Parser
             $str = preg_replace('/\x5c([' . $in . '])/', $out, $str);
         }
 
-        if (stripos($str, '\u') === FALSE)
+        if (stripos($str, '\u') === false) {
             return $str;
+        }
 
         while (preg_match('/\\\(U)([0-9A-F]{8})/', $str, $matches) ||
                preg_match('/\\\(u)([0-9A-F]{4})/', $str, $matches)) {
             $no = hexdec($matches[2]);
-            if ($no < 128)
+            if ($no < 128) {                // 0x80
                 $char = chr($no);
-            else if ($no < 2048)
+            } elseif ($no < 2048) {         // 0x800
                 $char = chr(($no >> 6) + 192) .
                         chr(($no & 63) + 128);
-            else if ($no < 65536)
+            } elseif ($no < 65536) {        // 0x10000
                 $char = chr(($no >> 12) + 224) .
                         chr((($no >> 6) & 63) + 128) .
                         chr(($no & 63) + 128);
-            else if ($no < 2097152)
+            } elseif ($no < 2097152) {      // 0x200000
                 $char = chr(($no >> 18) + 240) .
                         chr((($no >> 12) & 63) + 128) .
                         chr((($no >> 6) & 63) + 128) .
                         chr(($no & 63) + 128);
-            else
-                $char= '';
+            } else {
+                # FIXME: throw an exception instead?
+                $char = '';
+            }
             $str = str_replace('\\' . $matches[1] . $matches[2], $char, $str);
         }
         return $str;
@@ -100,20 +103,21 @@ class EasyRdf_Parser_Ntriples extends EasyRdf_Parser
     /**
      * @ignore
      */
-    protected function parseNtriplesSubject($sub)
+    protected function parseNtriplesSubject($sub, $lineNum)
     {
         if (preg_match('/<([^<>]+)>/', $sub, $matches)) {
             return $this->unescapeString($matches[1]);
-        } else if (preg_match('/_:([A-Za-z0-9]*)/', $sub, $matches)) {
+        } elseif (preg_match('/_:([A-Za-z0-9]*)/', $sub, $matches)) {
             if (empty($matches[1])) {
-                return $this->_graph->newBNodeId();
+                return $this->graph->newBNodeId();
             } else {
                 $nodeid = $this->unescapeString($matches[1]);
                 return $this->remapBnode($nodeid);
             }
         } else {
-            throw new EasyRdf_Exception(
-                "Failed to parse subject: $sub"
+            throw new EasyRdf_Parser_Exception(
+                "Failed to parse subject: $sub",
+                $lineNum
             );
         }
     }
@@ -121,7 +125,7 @@ class EasyRdf_Parser_Ntriples extends EasyRdf_Parser
     /**
      * @ignore
      */
-    protected function parseNtriplesObject($obj)
+    protected function parseNtriplesObject($obj, $lineNum)
     {
         if (preg_match('/"(.+)"\^\^<([^<>]+)>/', $obj, $matches)) {
             return array(
@@ -129,21 +133,21 @@ class EasyRdf_Parser_Ntriples extends EasyRdf_Parser
                 'value' => $this->unescapeString($matches[1]),
                 'datatype' => $this->unescapeString($matches[2])
             );
-        } else if (preg_match('/"(.+)"@([\w\-]+)/', $obj, $matches)) {
+        } elseif (preg_match('/"(.+)"@([\w\-]+)/', $obj, $matches)) {
             return array(
                 'type' => 'literal',
                 'value' => $this->unescapeString($matches[1]),
                 'lang' => $this->unescapeString($matches[2])
             );
-        } else if (preg_match('/"(.*)"/', $obj, $matches)) {
+        } elseif (preg_match('/"(.*)"/', $obj, $matches)) {
             return array('type' => 'literal', 'value' => $this->unescapeString($matches[1]));
-        } else if (preg_match('/<([^<>]+)>/', $obj, $matches)) {
+        } elseif (preg_match('/<([^<>]+)>/', $obj, $matches)) {
             return array('type' => 'uri', 'value' => $matches[1]);
-        } else if (preg_match('/_:([A-Za-z0-9]*)/', $obj, $matches)) {
+        } elseif (preg_match('/_:([A-Za-z0-9]*)/', $obj, $matches)) {
             if (empty($matches[1])) {
                 return array(
                     'type' => 'bnode',
-                    'value' => $this->_graph->newBNodeId()
+                    'value' => $this->graph->newBNodeId()
                 );
             } else {
                 $nodeid = $this->unescapeString($matches[1]);
@@ -153,8 +157,9 @@ class EasyRdf_Parser_Ntriples extends EasyRdf_Parser
                 );
             }
         } else {
-            throw new EasyRdf_Exception(
-                "Failed to parse object: $obj"
+            throw new EasyRdf_Parser_Exception(
+                "Failed to parse object: $obj",
+                $lineNum
             );
         }
     }
@@ -178,19 +183,29 @@ class EasyRdf_Parser_Ntriples extends EasyRdf_Parser
             );
         }
 
-        $lines = preg_split("/[\r\n]+/", strval($data));
-        foreach ($lines as $line) {
-            if (preg_match("/^\s*#/", $line)) {
+        $lines = preg_split('/\x0D?\x0A/', strval($data));
+        foreach ($lines as $index => $line) {
+            $lineNum = $index + 1;
+            if (preg_match('/^\s*#/', $line)) {
+                # Comment
                 continue;
-            } else if (preg_match("/(.+)\s+<([^<>]+)>\s+(.+)\s*\./", $line, $matches)) {
+            } elseif (preg_match('/^\s*(.+?)\s+<([^<>]+?)>\s+(.+?)\s*\.\s*$/', $line, $matches)) {
                 $this->addTriple(
-                    $this->parseNtriplesSubject($matches[1]),
+                    $this->parseNtriplesSubject($matches[1], $lineNum),
                     $this->unescapeString($matches[2]),
-                    $this->parseNtriplesObject($matches[3])
+                    $this->parseNtriplesObject($matches[3], $lineNum)
+                );
+            } elseif (preg_match('/^\s*$/', $line)) {
+                # Blank line
+                continue;
+            } else {
+                throw new EasyRdf_Parser_Exception(
+                    "Failed to parse statement",
+                    $lineNum
                 );
             }
         }
 
-        return $this->_tripleCount;
+        return $this->tripleCount;
     }
 }

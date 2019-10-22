@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,26 +31,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
  * Class for returned for SPARQL SELECT and ASK query responses.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Sparql_Result extends ArrayIterator
 {
-    private $_type = null;
-    private $_boolean = null;
+    private $type = null;
+    private $boolean = null;
 
-    private $_ordered = null;
-    private $_distinct = null;
-    private $_fields = array();
+    private $ordered = null;
+    private $distinct = null;
+    private $fields = array();
 
     /** A constant for the SPARQL Query Results XML Format namespace */
     const SPARQL_XML_RESULTS_NS = 'http://www.w3.org/2005/sparql-results#';
@@ -67,9 +66,9 @@ class EasyRdf_Sparql_Result extends ArrayIterator
     public function __construct($data, $mimeType)
     {
         if ($mimeType == 'application/sparql-results+xml') {
-            return $this->_parseXml($data);
-        } else if ($mimeType == 'application/sparql-results+json') {
-            return $this->_parseJson($data);
+            return $this->parseXml($data);
+        } elseif ($mimeType == 'application/sparql-results+json') {
+            return $this->parseJson($data);
         } else {
             throw new EasyRdf_Exception(
                 "Unsupported SPARQL Query Results format: $mimeType"
@@ -86,7 +85,7 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      */
     public function getType()
     {
-        return $this->_type;
+        return $this->type;
     }
 
     /** Return the boolean value of the query result
@@ -99,7 +98,7 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      */
     public function getBoolean()
     {
-        return $this->_boolean;
+        return $this->boolean;
     }
 
     /** Return true if the result of the query was true.
@@ -108,7 +107,7 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      */
     public function isTrue()
     {
-        return $this->_boolean == true;
+        return $this->boolean == true;
     }
 
     /** Return false if the result of the query was false.
@@ -117,7 +116,7 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      */
     public function isFalse()
     {
-        return $this->_boolean == false;
+        return $this->boolean == false;
     }
 
     /** Return the number of fields in a query result of type bindings.
@@ -126,7 +125,7 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      */
     public function numFields()
     {
-        return count($this->_fields);
+        return count($this->fields);
     }
 
     /** Return the number of rows in a query result of type bindings.
@@ -144,7 +143,7 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      */
     public function getFields()
     {
-        return $this->_fields;
+        return $this->fields;
     }
 
     /** Return a human readable view of the query result.
@@ -152,16 +151,16 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      * This method is intended to be a debugging aid and will
      * return a pretty-print view of the query result.
      *
-     * @param  bool  $html  Set to true to format the dump using HTML
+     * @param  string  $format  Either 'text' or 'html'
      */
-    public function dump($html=true)
+    public function dump($format = 'html')
     {
-        if ($this->_type == 'bindings') {
+        if ($this->type == 'bindings') {
             $result = '';
-            if ($html) {
+            if ($format == 'html') {
                 $result .= "<table class='sparql-results' style='border-collapse:collapse'>";
                 $result .= "<tr>";
-                foreach ($this->_fields as $field) {
+                foreach ($this->fields as $field) {
                     $result .= "<th style='border:solid 1px #000;padding:4px;".
                                "vertical-align:top;background-color:#eee;'>".
                                "?$field</th>";
@@ -169,10 +168,14 @@ class EasyRdf_Sparql_Result extends ArrayIterator
                 $result .= "</tr>";
                 foreach ($this as $row) {
                     $result .= "<tr>";
-                    foreach ($this->_fields as $field) {
-                        $result .= "<td style='border:solid 1px #000;padding:4px;".
-                                   "vertical-align:top'>".
-                                   $row->$field->dumpValue($html)."</td>";
+                    foreach ($this->fields as $field) {
+                        if (isset($row->$field)) {
+                            $result .= "<td style='border:solid 1px #000;padding:4px;".
+                                       "vertical-align:top'>".
+                                       $row->$field->dumpValue($format)."</td>";
+                        } else {
+                            $result .= "<td>&nbsp;</td>";
+                        }
                     }
                     $result .= "</tr>";
                 }
@@ -180,7 +183,7 @@ class EasyRdf_Sparql_Result extends ArrayIterator
             } else {
                 // First calculate the width of each comment
                 $colWidths = array();
-                foreach ($this->_fields as $field) {
+                foreach ($this->fields as $field) {
                     $colWidths[$field] = strlen($field);
                 }
 
@@ -188,7 +191,7 @@ class EasyRdf_Sparql_Result extends ArrayIterator
                 foreach ($this as $row) {
                     $textRow = array();
                     foreach ($row as $k => $v) {
-                        $textRow[$k] = $v->dumpValue(false);
+                        $textRow[$k] = $v->dumpValue('text');
                         $width = strlen($textRow[$k]);
                         if ($colWidths[$k] < $width) {
                             $colWidths[$k] = $width;
@@ -205,7 +208,7 @@ class EasyRdf_Sparql_Result extends ArrayIterator
 
                 // Output the field names
                 $result .= "$hr\n|";
-                foreach ($this->_fields as $field) {
+                foreach ($this->fields as $field) {
                     $result .= ' '.str_pad("?$field", $colWidths[$field]).' |';
                 }
 
@@ -222,16 +225,16 @@ class EasyRdf_Sparql_Result extends ArrayIterator
 
             }
             return $result;
-        } else if ($this->_type == 'boolean') {
-            $str = ($this->_boolean ? 'true' : 'false');
-            if ($html) {
+        } elseif ($this->type == 'boolean') {
+            $str = ($this->boolean ? 'true' : 'false');
+            if ($format == 'html') {
                 return "<p>Result: <span style='font-weight:bold'>$str</span></p>";
             } else {
                 return "Result: $str";
             }
         } else {
             throw new EasyRdf_Exception(
-                "Failed to dump SPARQL Query Results format, unknown type: ". $this->_type
+                "Failed to dump SPARQL Query Results format, unknown type: ". $this->type
             );
         }
     }
@@ -241,21 +244,21 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      *
      * @ignore
      */
-    protected function _newTerm($data)
+    protected function newTerm($data)
     {
         switch($data['type']) {
-          case 'bnode':
-              return new EasyRdf_Resource('_:'.$data['value']);
-          case 'uri':
-              return new EasyRdf_Resource($data['value']);
-          case 'literal':
-          case 'typed-literal':
-              return EasyRdf_Literal::create($data);
-          default:
-              throw new EasyRdf_Exception(
-                  "Failed to parse SPARQL Query Results format, unknown term type: ".
-                  $data['type']
-              );
+            case 'bnode':
+                return new EasyRdf_Resource('_:'.$data['value']);
+            case 'uri':
+                return new EasyRdf_Resource($data['value']);
+            case 'literal':
+            case 'typed-literal':
+                return EasyRdf_Literal::create($data);
+            default:
+                throw new EasyRdf_Exception(
+                    "Failed to parse SPARQL Query Results format, unknown term type: ".
+                    $data['type']
+                );
         }
     }
 
@@ -263,7 +266,7 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      *
      * @ignore
      */
-    protected function _parseXml($data)
+    protected function parseXml($data)
     {
         $doc = new DOMDocument();
         $doc->loadXML($data);
@@ -281,9 +284,9 @@ class EasyRdf_Sparql_Result extends ArrayIterator
         # Is it the result of an ASK query?
         $boolean = $doc->getElementsByTagName('boolean');
         if ($boolean->length) {
-            $this->_type = 'boolean';
+            $this->type = 'boolean';
             $value = $boolean->item(0)->nodeValue;
-            $this->_boolean = $value == 'true' ? true : false;
+            $this->boolean = $value == 'true' ? true : false;
             return;
         }
 
@@ -292,14 +295,14 @@ class EasyRdf_Sparql_Result extends ArrayIterator
         if ($head->length) {
             $variables = $head->item(0)->getElementsByTagName('variable');
             foreach ($variables as $variable) {
-                $this->_fields[] = $variable->getAttribute('name');
+                $this->fields[] = $variable->getAttribute('name');
             }
         }
 
         # Is it the result of a SELECT query?
         $resultstag = $doc->getElementsByTagName('results');
         if ($resultstag->length) {
-            $this->_type = 'bindings';
+            $this->type = 'bindings';
             $results = $resultstag->item(0)->getElementsByTagName('result');
             foreach ($results as $result) {
                 $bindings = $result->getElementsByTagName('binding');
@@ -307,9 +310,10 @@ class EasyRdf_Sparql_Result extends ArrayIterator
                 foreach ($bindings as $binding) {
                     $key = $binding->getAttribute('name');
                     foreach ($binding->childNodes as $node) {
-                        if ($node->nodeType != XML_ELEMENT_NODE)
+                        if ($node->nodeType != XML_ELEMENT_NODE) {
                             continue;
-                        $t->$key = $this->_newTerm(
+                        }
+                        $t->$key = $this->newTerm(
                             array(
                                 'type' => $node->nodeName,
                                 'value' => $node->nodeValue,
@@ -334,26 +338,26 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      *
      * @ignore
      */
-    protected function _parseJson($data)
+    protected function parseJson($data)
     {
         // Decode JSON to an array
         $data = json_decode($data, true);
 
         if (isset($data['boolean'])) {
-            $this->_type = 'boolean';
-            $this->_boolean = $data['boolean'];
-        } else if (isset($data['results'])) {
-            $this->_type = 'bindings';
+            $this->type = 'boolean';
+            $this->boolean = $data['boolean'];
+        } elseif (isset($data['results'])) {
+            $this->type = 'bindings';
             if (isset($data['head']['vars'])) {
-                $this->_fields = $data['head']['vars'];
+                $this->fields = $data['head']['vars'];
             }
 
             foreach ($data['results']['bindings'] as $row) {
-              $t = new stdClass();
-              foreach ($row as $key => $value) {
-                  $t->$key = $this->_newTerm($value);
-              }
-              $this[] = $t;
+                $t = new stdClass();
+                foreach ($row as $key => $value) {
+                    $t->$key = $this->newTerm($value);
+                }
+                $this[] = $t;
             }
         } else {
             throw new EasyRdf_Exception(
@@ -371,10 +375,10 @@ class EasyRdf_Sparql_Result extends ArrayIterator
      */
     public function __toString()
     {
-        if ($this->_type == 'boolean') {
-            return $this->_boolean ? 'true' : 'false';
+        if ($this->type == 'boolean') {
+            return $this->boolean ? 'true' : 'false';
         } else {
-            return $this->dump(false);
+            return $this->dump('text');
         }
     }
 }

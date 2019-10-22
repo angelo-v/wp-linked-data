@@ -5,7 +5,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2012 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,23 +31,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
  * A pure-php class to parse RDF/JSON with no dependancies.
  *
  * http://n2.talis.com/wiki/RDF_JSON_Specification
+ * docs/appendix-a-rdf-formats-json.md
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2009-2012 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2009-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
  */
 class EasyRdf_Parser_Json extends EasyRdf_Parser_RdfPhp
 {
-    private $_jsonLastErrorExists = false;
+    private $jsonLastErrorExists = false;
 
     /**
      * Constructor
@@ -56,7 +56,7 @@ class EasyRdf_Parser_Json extends EasyRdf_Parser_RdfPhp
      */
     public function __construct()
     {
-        $this->_jsonLastErrorExists = function_exists('json_last_error');
+        $this->jsonLastErrorExists = function_exists('json_last_error');
     }
 
     /** Return the last JSON parser error as a string
@@ -65,9 +65,9 @@ class EasyRdf_Parser_Json extends EasyRdf_Parser_RdfPhp
      *
      * @ignore
      */
-    protected function _jsonLastErrorString()
+    protected function jsonLastErrorString()
     {
-        if ($this->_jsonLastErrorExists) {
+        if ($this->jsonLastErrorExists) {
             switch (json_last_error()) {
                 case JSON_ERROR_NONE:
                     return null;
@@ -85,7 +85,7 @@ class EasyRdf_Parser_Json extends EasyRdf_Parser_RdfPhp
                     return "JSON Parse error: unknown";
             }
         } else {
-           return "JSON Parse error";
+            return "JSON Parse error";
         }
     }
 
@@ -95,7 +95,7 @@ class EasyRdf_Parser_Json extends EasyRdf_Parser_RdfPhp
      *
      * @ignore
      */
-    protected function _parseJsonTriples($data, $baseUri)
+    protected function parseJsonTriples($data, $baseUri)
     {
         foreach ($data['triples'] as $triple) {
             if ($triple['subject']['type'] == 'bnode') {
@@ -118,7 +118,7 @@ class EasyRdf_Parser_Json extends EasyRdf_Parser_RdfPhp
             $this->addTriple($subject, $predicate, $object);
         }
 
-        return $this->_tripleCount;
+        return $this->tripleCount;
     }
 
     /**
@@ -142,13 +142,13 @@ class EasyRdf_Parser_Json extends EasyRdf_Parser_RdfPhp
 
         $decoded = @json_decode(strval($data), true);
         if ($decoded === null) {
-            throw new EasyRdf_Exception(
-                $this->_jsonLastErrorString()
+            throw new EasyRdf_Parser_Exception(
+                $this->jsonLastErrorString()
             );
         }
 
         if (array_key_exists('triples', $decoded)) {
-            return $this->_parseJsonTriples($decoded, $baseUri);
+            return $this->parseJsonTriples($decoded, $baseUri);
         } else {
             return parent::parse($graph, $decoded, 'php', $baseUri);
         }

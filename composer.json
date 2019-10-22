@@ -1,0 +1,6 @@
+{
+    "require": {
+        "willdurand/negotiation": "^2.3",
+        "easyrdf/easyrdf": "^0.9.1"
+    }
+}

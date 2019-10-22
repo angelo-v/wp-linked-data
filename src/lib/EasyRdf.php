@@ -8,7 +8,7 @@
  *
  * LICENSE
  *
- * Copyright (c) 2009-2011 Nicholas J Humfrey.  All rights reserved.
+ * Copyright (c) 2009-2013 Nicholas J Humfrey.  All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -34,9 +34,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package    EasyRdf
- * @copyright  Copyright (c) 2011 Nicholas J Humfrey
+ * @copyright  Copyright (c) 2011-2013 Nicholas J Humfrey
  * @license    http://www.opensource.org/licenses/bsd-license.php
- * @version    $Id$
  */
 
 /**
@@ -75,6 +74,11 @@ require_once "EasyRdf/Http/Client.php";
 require_once "EasyRdf/Http/Response.php";
 
 /**
+ * @see EasyRdf_Isomorphic
+ */
+require_once "EasyRdf/Isomorphic.php";
+
+/**
  * @see EasyRdf_Namespace
  */
 require_once "EasyRdf/Namespace.php";
@@ -110,9 +114,19 @@ require_once "EasyRdf/Literal/Decimal.php";
 require_once "EasyRdf/Literal/HexBinary.php";
 
 /**
+ * @see EasyRdf_Literal_HTML
+ */
+require_once "EasyRdf/Literal/HTML.php";
+
+/**
  * @see EasyRdf_Literal_Integer
  */
 require_once "EasyRdf/Literal/Integer.php";
+
+/**
+ * @see EasyRdf_Literal_XML
+ */
+require_once "EasyRdf/Literal/XML.php";
 
 /**
  * @see EasyRdf_ParsedUri
@@ -123,6 +137,11 @@ require_once "EasyRdf/ParsedUri.php";
  * @see EasyRdf_Parser
  */
 require_once "EasyRdf/Parser.php";
+
+/**
+ * @see EasyRdf_Parser_Exception
+ */
+require_once "EasyRdf/Parser/Exception.php";
 
 /**
  * @see EasyRdf_Parser_RdfPhp
@@ -140,6 +159,11 @@ require_once "EasyRdf/Parser/Ntriples.php";
 require_once "EasyRdf/Parser/Json.php";
 
 /**
+ * @see EasyRdf_Parser_Rdfa
+ */
+require_once "EasyRdf/Parser/Rdfa.php";
+
+/**
  * @see EasyRdf_Parser_RdfXml
  */
 require_once "EasyRdf/Parser/RdfXml.php";
@@ -153,6 +177,16 @@ require_once "EasyRdf/Parser/Turtle.php";
  * @see EasyRdf_Resource
  */
 require_once "EasyRdf/Resource.php";
+
+/**
+ * @see EasyRdf_Collection
+ */
+require_once "EasyRdf/Collection.php";
+
+/**
+ * @see EasyRdf_Container
+ */
+require_once "EasyRdf/Container.php";
 
 /**
  * @see EasyRdf_Serialiser
