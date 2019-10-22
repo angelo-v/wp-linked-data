@@ -12,8 +12,6 @@ Alternatively you may copy the contents of the /src directory to wp-content/plug
 
 At least PHP 5.3.0 is required to use this plugin.
 
-It is recommended that you install the pecl_http PHP extension (http://pecl.php.net/package/pecl_http). The plugin will work without it, but only with a simplified, inaccurate content negotiation.
-
 ## Usage
 
 ### Linked Data

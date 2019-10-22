@@ -5,7 +5,7 @@ namespace org\desone\wordpress\wpLinkedData;
 require_once( WP_LINKED_DATA_PLUGIN_DIR_PATH . 'request/ContentNegotiation.php');
 
 /**
- * Delegates content negotiation to the pecl_http extension
+ * Delegates content negotiation to the willdurand/negotiation library
  */
 class WilldurandContentNegotiation implements ContentNegotiation
 {
