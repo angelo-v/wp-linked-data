@@ -27,6 +27,12 @@ class WilldurandContentNegotiationTest extends TestCase {
         $this->assertEquals ('application/n-triples', $type);
     }
 
+    public function testNegotiateJsonLd() {
+        $contentNegotiation = new WilldurandContentNegotiation();
+        $type = $contentNegotiation->negotiateRdfContentType('application/ld+json');
+        $this->assertEquals ('application/ld+json', $type);
+    }
+
     public function testNegotiateN3() {
         $contentNegotiation = new WilldurandContentNegotiation();
         $type = $contentNegotiation->negotiateRdfContentType('text/n3');
