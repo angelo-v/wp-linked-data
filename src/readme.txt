@@ -65,6 +65,10 @@ At least PHP 5.3.0 is required to use this plugin.
 
 == Changelog ==
 
+= 0.5.1 =
+
+* Fix: Serve HTML if HTML is prefered, even if RDF other formats are accepted via wildcard
+
 = 0.5 =
 
 * better support for content-negotiation. No need to intstall pecl_http anymore
