@@ -23,7 +23,7 @@ class WilldurandContentNegotiation implements ContentNegotiation
 
         $negotiatedType = $mediaType->getType();
 
-        return RdfType::getByMimeType($negotiatedType);
+        return $negotiatedType;
 
     }
 }
