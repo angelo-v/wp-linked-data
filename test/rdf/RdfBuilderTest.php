@@ -341,6 +341,8 @@ class RdfBuilderTest extends TestCase {
         $it = $graph->resource ($blogUri);
         $this->assertEquals ('sioct:Weblog', $it->type ());
         $this->assertProperty ($it, 'rdfs:label', 'My cool blog');
+        $homepage = $graph->get ($it, 'foaf:homepage');
+        $this->assertEquals ('http://example.com', $homepage->getUri ());
         $this->assertProperty ($it, 'rdfs:comment', 'Cool description');
         $this->assertPropertyNotPresent ($it, 'sioc:container_of');
     }
