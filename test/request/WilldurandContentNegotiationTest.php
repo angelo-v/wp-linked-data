@@ -57,9 +57,15 @@ class WilldurandContentNegotiationTest extends TestCase {
         $this->assertEquals (null, $type);
     }
 
+    public function testServeHtmlIfAnythingAcceptedButHtmlPrefered() {
+        $contentNegotiation = new WilldurandContentNegotiation();
+        $type = $contentNegotiation->negotiateRdfContentType('text/html,*/*;q=0.8');
+        $this->assertEquals (null, $type);
+    }
+
     public function testReturnBestQualityIfManyAccepted() {
         $contentNegotiation = new WilldurandContentNegotiation();
-        $type = $contentNegotiation->negotiateRdfContentType('application/rdf+xml;q=0.4, text/turtle;q=0.8, text/n3;q=0.2, text/plain;q=0.1');
+        $type = $contentNegotiation->negotiateRdfContentType('application/rdf+xml;q=0.4, text/turtle;q=0.8, text/n3;q=0.2, text/plain;q=0.1, text/html;q=0.2');
         $this->assertEquals ('text/turtle', $type);
     }
 

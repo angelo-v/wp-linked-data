@@ -14,7 +14,7 @@ class WilldurandContentNegotiation implements ContentNegotiation
     {
         $negotiator = new \Negotiation\Negotiator();
 
-        $priorities   = array('application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml', 'application/trig;q=0.1');
+        $priorities   = array('text/html', 'application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml', 'application/trig;q=0.1');
         $mediaType = $negotiator->getBest($acceptHeader, $priorities);
 
         if (is_null($mediaType)) {
@@ -25,6 +25,10 @@ class WilldurandContentNegotiation implements ContentNegotiation
 
         if ($negotiatedType == "application/trig") {
             return "text/turtle";
+        }
+
+        if ($negotiatedType == "text/html") {
+            return null;
         }
 
         return $negotiatedType;
