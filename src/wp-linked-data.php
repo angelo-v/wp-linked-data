@@ -19,10 +19,11 @@ if (phpVersionSupported()) {
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'wp-linked-data-initialize.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'request/SimplifiedContentNegotiation.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'request/PeclHttpContentNegotiation.php');
+    require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'request/WilldurandContentNegotiation.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'request/RequestInterceptor.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'rdf/RdfBuilder.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'rdf/RdfPrinter.php');
-    require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'lib/EasyRdf.php');
+    require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'vendor/autoload.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'controller/UserProfileController.php');
     require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'service/UserProfileWebIdService.php');
 }

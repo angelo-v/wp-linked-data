@@ -9,7 +9,7 @@ require_once 'test/mock/WP_Query.php';
 require_once 'test/mock/WP_Post.php';
 require_once 'test/mock/WP_User.php';
 require_once 'test/mock/service/MockedLocalWebIdService.php';
-require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'lib/EasyRdf.php');
+require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'vendor/autoload.php');
 require_once 'src/rdf/RdfBuilder.php';
 
 function get_permalink ($id) {

@@ -30,7 +30,7 @@ if (!class_exists ('WpLinkedDataInitializer')) {
             if (self::isPeclHttpInstalled ()) {
                 return new \org\desone\wordpress\wpLinkedData\PeclHttpContentNegotiation();
             } else {
-                return new \org\desone\wordpress\wpLinkedData\SimplifiedContentNegotiation();
+                return new \org\desone\wordpress\wpLinkedData\WilldurandContentNegotiation();
             }
         }
 

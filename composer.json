@@ -1,4 +1,7 @@
 {
+    "config": {
+        "vendor-dir": "src/vendor"
+    },
     "require": {
         "willdurand/negotiation": "^2.3",
         "easyrdf/easyrdf": "^0.9.1"
