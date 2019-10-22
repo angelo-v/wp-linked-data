@@ -10,20 +10,19 @@ class RdfPrinter {
     /**
      * Prints the given graph in the given format
      * @param $graph
-     * @param $rdf_format
+     * @param $mimeType
      */
-    public function printGraph ($graph, $rdf_format) {
-        $this->addContentTypeHeader ($rdf_format);
+    public function printGraph ($graph, $mimeType) {
+        $this->addContentTypeHeader ($mimeType);
         $this->allowCors();
-        $data = $graph->serialise ($rdf_format);
+        $data = $graph->serialise ($mimeType);
         if (!is_scalar ($data)) {
             $data = var_export ($data, true);
         }
         print $data;
     }
 
-    private function addContentTypeHeader ($rdfFormat) {
-        $mimeType = RdfType::getMimeType($rdfFormat);
+    private function addContentTypeHeader ($mimeType) {
         header ('Content-Type: ' . $mimeType);
     }
 

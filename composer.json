@@ -1,0 +1,10 @@
+{
+    "config": {
+        "vendor-dir": "src/vendor"
+    },
+    "require": {
+        "willdurand/negotiation": "^2.3",
+        "easyrdf/easyrdf": "^0.9.1",
+        "ml/json-ld": "^1.1.0"
+    }
+}

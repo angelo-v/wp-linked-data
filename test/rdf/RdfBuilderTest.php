@@ -9,7 +9,7 @@ require_once 'test/mock/WP_Query.php';
 require_once 'test/mock/WP_Post.php';
 require_once 'test/mock/WP_User.php';
 require_once 'test/mock/service/MockedLocalWebIdService.php';
-require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'lib/EasyRdf.php');
+require_once(WP_LINKED_DATA_PLUGIN_DIR_PATH . 'vendor/autoload.php');
 require_once 'src/rdf/RdfBuilder.php';
 
 function get_permalink ($id) {
@@ -341,6 +341,8 @@ class RdfBuilderTest extends TestCase {
         $it = $graph->resource ($blogUri);
         $this->assertEquals ('sioct:Weblog', $it->type ());
         $this->assertProperty ($it, 'rdfs:label', 'My cool blog');
+        $homepage = $graph->get ($it, 'foaf:homepage');
+        $this->assertEquals ('http://example.com', $homepage->getUri ());
         $this->assertProperty ($it, 'rdfs:comment', 'Cool description');
         $this->assertPropertyNotPresent ($it, 'sioc:container_of');
     }

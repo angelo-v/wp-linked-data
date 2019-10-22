@@ -7,6 +7,7 @@ jobs:
     steps:
       - checkout
       - run: mkdir -p ~/phpunit
+      - run: composer install
       - run: phpunit test --log-junit ~/phpunit/test-results.xml
       - store_test_results:
           path: ~/phpunit

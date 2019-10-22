@@ -128,6 +128,8 @@ class RdfBuilder {
         $blogResource = $graph->resource ($blogUri, 'sioct:Weblog');
         $blogResource->set ('rdfs:label', get_bloginfo('name') ?: null);
         $blogResource->set ('rdfs:comment', get_bloginfo('description') ?: null);
+        $homepageResource= $graph->resource (site_url());
+        $blogResource->set ('foaf:homepage', $homepageResource);
         $this->linkAllPosts ($wpQuery, $graph, $blogResource, 'sioc:container_of');
         return $graph;
     }
