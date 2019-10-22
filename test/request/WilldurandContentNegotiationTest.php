@@ -21,6 +21,12 @@ class WilldurandContentNegotiationTest extends TestCase {
         $this->assertEquals ('text/turtle', $type);
     }
 
+    public function testFallBackToTurtleWhenNegotiatedTrig () {
+        $contentNegotiation = new WilldurandContentNegotiation();
+        $type = $contentNegotiation->negotiateRdfContentType('application/trig');
+        $this->assertEquals ('text/turtle', $type);
+    }
+
     public function testReturnTurtleIfBothAccepted () {
         $contentNegotiation = new WilldurandContentNegotiation();
         $type = $contentNegotiation->negotiateRdfContentType('application/rdf+xml, text/turtle');
@@ -33,10 +39,16 @@ class WilldurandContentNegotiationTest extends TestCase {
         $this->assertEquals (null, $type);
     }
 
-    public function testReturnBestQualityIfBothAccepted() {
+    public function testReturnBestQualityIfManyAccepted() {
         $contentNegotiation = new WilldurandContentNegotiation();
         $type = $contentNegotiation->negotiateRdfContentType('application/rdf+xml;q=0.4, text/turtle;q=0.8, text/n3;q=0.2, text/plain;q=0.1');
         $this->assertEquals ('text/turtle', $type);
+    }
+
+    public function testFallBackToSecondBestFormatAfterTrig() {
+        $contentNegotiation = new WilldurandContentNegotiation();
+        $type = $contentNegotiation->negotiateRdfContentType('application/rdf+xml;q=0.9, text/turtle;q=0.1, application/trig;q=1');
+        $this->assertEquals ('application/rdf+xml', $type);
     }
 
 }
