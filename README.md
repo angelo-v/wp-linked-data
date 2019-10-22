@@ -2,7 +2,7 @@
 
 WordPress-Plugin to publish blog contents as Linked Data.
 
-Version 0.4
+Version 0.5
 
 ## Installation
 
@@ -63,6 +63,17 @@ You may enter any RDF triples as RDF/XML, Turtle or N3. The triples will occur i
 Please contact me for any questions & feedback: [angelo.veltens@online.de](mailto:angelo.veltens@online.de)
 
 ## Release Notes
+
+Version 0.5
+
+- better support for content-negotiation. No need to intstall pecl_http anymore
+- add foaf:homepage to the Weblog resource 
+- now able to serve the following content types:
+  - application/ld+json
+  - text/turtle
+  - text/n3
+  - application/n-triples
+  - application/rdf+xml
 
 Version 0.4
 

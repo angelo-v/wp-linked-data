@@ -3,7 +3,7 @@ Contributors: aveltens
 Author URI: https://datenwissen.de/
 Tags: linked data, rdf, semantic web, webid
 Requires at least: 3.5.1
-Tested up to: 5.1
+Tested up to: 5.2.4
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0
@@ -64,6 +64,17 @@ Just copy the contents of this directory to wp-content/plugins/wp-linked-data di
 At least PHP 5.3.0 is required to use this plugin.
 
 == Changelog ==
+
+= 0.5 =
+
+* better support for content-negotiation. No need to intstall pecl_http anymore
+* add foaf:homepage to the Weblog resource
+* no able to serve the following content types:
+  * application/ld+json
+  * text/turtle
+  * text/n3
+  * application/n-triples
+  * application/rdf+xml
 
 = 0.4 =
 
