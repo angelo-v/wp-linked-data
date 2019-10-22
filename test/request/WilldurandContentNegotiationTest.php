@@ -21,6 +21,12 @@ class WilldurandContentNegotiationTest extends TestCase {
         $this->assertEquals ('text/turtle', $type);
     }
 
+    public function testNegotiateNTriples() {
+        $contentNegotiation = new WilldurandContentNegotiation();
+        $type = $contentNegotiation->negotiateRdfContentType('application/n-triples');
+        $this->assertEquals ('application/n-triples', $type);
+    }
+
     public function testFallBackToTurtleWhenNegotiatedTrig () {
         $contentNegotiation = new WilldurandContentNegotiation();
         $type = $contentNegotiation->negotiateRdfContentType('application/trig');

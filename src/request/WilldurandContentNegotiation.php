@@ -14,7 +14,7 @@ class WilldurandContentNegotiation implements ContentNegotiation
     {
         $negotiator = new \Negotiation\Negotiator();
 
-        $priorities   = array('text/turtle', 'application/rdf+xml', 'application/trig;q=0.1');
+        $priorities   = array('text/turtle', 'application/n-triples', 'application/rdf+xml', 'application/trig;q=0.1');
         $mediaType = $negotiator->getBest($acceptHeader, $priorities);
 
         if (is_null($mediaType)) {
