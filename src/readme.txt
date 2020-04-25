@@ -1,9 +1,9 @@
 === wp-linked-data ===
 Contributors: aveltens
-Author URI: https://datenwissen.de/
-Tags: linked data, rdf, semantic web, webid
+Author URI: https://angelo.veltens.org/profile/card#me
+Tags: linked data, rdf, semantic web, webid, solid
 Requires at least: 3.5.1
-Tested up to: 5.2.4
+Tested up to: 5.4
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0
@@ -67,7 +67,7 @@ At least PHP 5.3.0 is required to use this plugin.
 
 = 0.5.1 =
 
-* Fix: Serve HTML if HTML is prefered, even if RDF other formats are accepted via wildcard
+* Fix: Serve HTML if HTML is preferred, even if RDF other formats are accepted via wildcard
 
 = 0.5 =
 
@@ -91,12 +91,12 @@ At least PHP 5.3.0 is required to use this plugin.
 * add custom RDF triples to your profile document
 
 = 0.2 =
-* distinguish users (persons) and their user accounts
+* distinguish users (persons), and their user accounts
 * use sioc:creator_of instead of foaf:publications
 * replaced inexistent dc:content by sioc:content (plain text) for blog post content
 * added sioc:Weblog resource for the blog itself
 
 = 0.1 =
-* puplishing blog post metadata as linked data
+* publishing blog post metadata as linked data
 * publishing FOAF profiles for blog authors
 * content negotiation supporting Turtle and RDF/XML format

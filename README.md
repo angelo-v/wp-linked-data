@@ -66,11 +66,11 @@ Please contact me for any questions & feedback: [angelo.veltens@online.de](mailt
 
 Version 0.5.1
 
-- Fix: Serve HTML if HTML is prefered, even if RDF other formats are accepted via wildcard
+- Fix: Serve HTML if HTML is preferred, even if RDF other formats are accepted via wildcard
 
 Version 0.5
 
-- better support for content-negotiation. No need to intstall pecl_http anymore
+- better support for content-negotiation. No need to install pecl_http anymore
 - add foaf:homepage to the Weblog resource 
 - now able to serve the following content types:
   - application/ld+json
@@ -92,14 +92,14 @@ Version 0.3
 
 Version 0.2
 
-- distinguish users (persons) and their user accounts
+- distinguish users (persons), and their user accounts
 - use sioc:creator_of instead of foaf:publications
 - replaced inexistent dc:content by sioc:content (plain text) for blog post content
 - added sioc:Weblog resource for the blog itself
 
 Version 0.1
 
-- puplishing blog post metadata as linked data
+- publishing blog post metadata as linked data
 - publishing FOAF profiles for blog authors
 - content negotiation supporting Turtle and RDF/XML format
 
