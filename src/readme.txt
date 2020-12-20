@@ -3,7 +3,7 @@ Contributors: aveltens
 Author URI: https://angelo.veltens.org/profile/card#me
 Tags: linked data, rdf, semantic web, webid, solid
 Requires at least: 3.5.1
-Tested up to: 5.4
+Tested up to: 5.6
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0
