@@ -12,6 +12,10 @@ class WilldurandContentNegotiation implements ContentNegotiation
 
     public function negotiateRdfContentType($acceptHeader)
     {
+        if (is_null($acceptHeader)) {
+            return null;
+        }
+        
         $negotiator = new \Negotiation\Negotiator();
 
         $priorities   = array('text/html', 'application/ld+json', 'text/turtle', 'text/n3', 'application/n-triples', 'application/rdf+xml', 'application/trig;q=0.1');
