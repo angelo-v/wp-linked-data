@@ -57,6 +57,12 @@ class WilldurandContentNegotiationTest extends TestCase {
         $this->assertEquals (null, $type);
     }
 
+    public function testReturnNullIfAcceptHeaderIsNull () {
+        $contentNegotiation = new WilldurandContentNegotiation();
+        $type = $contentNegotiation->negotiateRdfContentType(null);
+        $this->assertEquals (null, $type);
+    }
+
     public function testServeHtmlIfAnythingAcceptedButHtmlPrefered() {
         $contentNegotiation = new WilldurandContentNegotiation();
         $type = $contentNegotiation->negotiateRdfContentType('text/html,*/*;q=0.8');
