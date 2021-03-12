@@ -65,6 +65,10 @@ At least PHP 5.3.0 is required to use this plugin.
 
 == Changelog ==
 
+= 0.5.2 =
+
+* Fix: Serve HTML if Accept header is empty instead of failing with status 500
+
 = 0.5.1 =
 
 * Fix: Serve HTML if HTML is preferred, even if RDF other formats are accepted via wildcard

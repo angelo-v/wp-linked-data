@@ -2,7 +2,7 @@
 
 WordPress-Plugin to publish blog contents as Linked Data.
 
-Version 0.5.1
+Version 0.5.2
 
 ## Installation
 
@@ -63,6 +63,10 @@ You may enter any RDF triples as RDF/XML, Turtle or N3. The triples will occur i
 Please contact me for any questions & feedback: [angelo.veltens@online.de](mailto:angelo.veltens@online.de)
 
 ## Release Notes
+
+Version 0.5.2
+
+- Fix: Serve HTML if Accept header is empty instead of failing with status 500
 
 Version 0.5.1
 
