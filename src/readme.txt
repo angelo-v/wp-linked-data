@@ -65,6 +65,10 @@ At least PHP 5.3.0 is required to use this plugin.
 
 == Changelog ==
 
+= 0.5.3 =
+
+* Fix: Replace link to solid.community with solidcommunity.net
+
 = 0.5.2 =
 
 * Fix: Serve HTML if Accept header is empty instead of failing with status 500

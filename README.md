@@ -64,6 +64,10 @@ Please contact me for any questions & feedback: [angelo.veltens@online.de](mailt
 
 ## Release Notes
 
+Version 0.5.3
+
+- Fix: Replace link to solid.community with solidcommunity.net
+
 Version 0.5.2
 
 - Fix: Serve HTML if Accept header is empty instead of failing with status 500
