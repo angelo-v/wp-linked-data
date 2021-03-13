@@ -47,7 +47,7 @@ You can choose, where your WebID is hosted:
 
 Whatever option you choose, your wordpress account will always be identified as "http://[your-domain]\>/author/[your-username]>#account". The option only affects, how you, as a person, will be identified.
 
-If you do not have a WebID yet, choose the first option, or get a WebID at https://solid.community. More Information about WebID: http://webid.info/
+If you do not have a WebID yet, choose the first option, or get a WebID at https://solidcommunity.net. More Information about WebID: http://webid.info/
 
 
 #### RSA Public Key
