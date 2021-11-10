@@ -22,7 +22,9 @@ E.g. if a blog post ist available at http://example.org/2013/04/my-first-blog-po
 
 You may use curl to retrieve Linked Data, e.g.:
 
+```sh
 curl -H 'Accept: text/turtle' http://example.org/2013/04/my-first-blog-post#it
+```
 
 An author, as a person, is per default identified by the author page URI appended by the fragment identifier #me.
 
@@ -30,7 +32,9 @@ E.g. if the authors page is http://example.org/author/alice, the person Alice is
 
 You may try curl again, to retrieve a FOAF-Profile:
 
+```sh
 curl -H 'Accept: text/turtle' http://example.org/author/alice#me
+```
 
 Instead of using WordPress to host the FOAF-Profile, you are able to link your existing WebID to your WordPress account. (See next section)
 
@@ -48,7 +52,6 @@ You can choose, where your WebID is hosted:
 Whatever option you choose, your wordpress account will always be identified as "http://[your-domain]\>/author/[your-username]>#account". The option only affects, how you, as a person, will be identified.
 
 If you do not have a WebID yet, choose the first option, or get a WebID at https://solidcommunity.net. More Information about WebID: http://webid.info/
-
 
 #### RSA Public Key
 
