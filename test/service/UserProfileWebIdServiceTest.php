@@ -33,7 +33,7 @@ function setMockedMetaData ($userId, $dataArray) {
 
 class UserProfileWebIdServiceTest extends TestCase {
 
-    protected function setUp () {
+    protected function setUp () : void {
         global $mockedMetaData;
         $mockedMetaData = array(
             1 => array(

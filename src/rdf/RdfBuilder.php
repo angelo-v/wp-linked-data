@@ -14,7 +14,7 @@ class RdfBuilder {
     }
 
     public function buildGraph ($queriedObject, $wpQuery) {
-        $graph = new \EasyRdf_Graph();
+        $graph = new \EasyRdf\Graph();
         if (!$queriedObject) {
             return $this->buildGraphForBlog ($graph, $wpQuery);
         }
@@ -45,8 +45,8 @@ class RdfBuilder {
 
         $post_resource->set ('dc:title', $post->post_title);
         $post_resource->set ('sioc:content', strip_tags($post->post_content));
-        $post_resource->set ('dc:modified', \EasyRdf_Literal_Date::parse($post->post_modified));
-        $post_resource->set ('dc:created', \EasyRdf_Literal_Date::parse($post->post_date));
+        $post_resource->set ('dc:modified', \EasyRdf\Literal\Date::parse($post->post_modified));
+        $post_resource->set ('dc:created', \EasyRdf\Literal\Date::parse($post->post_date));
 
         $author = get_userdata ($post->post_author);
         $accountUri = $this->webIdService->getAccountUri ($author);
@@ -99,8 +99,8 @@ class RdfBuilder {
         $rsaPublicKey = $this->webIdService->getRsaPublicKey ($user);
         if ($rsaPublicKey) {
             $key_resource = $graph->newBNode ('cert:RSAPublicKey');
-            $key_resource->set ('cert:exponent', new \EasyRdf_Literal_Integer($rsaPublicKey->getExponent ()));
-            $key_resource->set ('cert:modulus', new \EasyRdf_Literal_HexBinary($rsaPublicKey->getModulus ()));
+            $key_resource->set ('cert:exponent', new \EasyRdf\Literal\Integer($rsaPublicKey->getExponent ()));
+            $key_resource->set ('cert:modulus', new \EasyRdf\Literal\HexBinary($rsaPublicKey->getModulus ()));
             $author_resource->set ('cert:key', $key_resource);
         }
     }

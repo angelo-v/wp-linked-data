@@ -3,7 +3,7 @@
 Plugin Name: wp-linked-data
 Plugin URI: http://wordpress.org/extend/plugins/wp-linked-data/
 Description: Publishing blog contents as linked data
-Version: 0.5.3
+Version: 0.5.4
 Author: Angelo Veltens
 Author URI: http://angelo.veltens.org/
 License: GPLv3
@@ -29,7 +29,7 @@ if (phpVersionSupported()) {
 if (!class_exists ('WpLinkedData')) {
     class WpLinkedData {
 
-        function WpLinkedData ($wpLinkedDataInitializer) {
+        function __construct ($wpLinkedDataInitializer) {
             register_activation_hook (__FILE__, array(&$this, 'onPluginActivation'));
             if (phpVersionSupported()) {
                 $interceptor = $wpLinkedDataInitializer->initialize ();

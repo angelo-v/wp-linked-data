@@ -3,7 +3,7 @@ Contributors: aveltens
 Author URI: https://angelo.veltens.org/profile/card#me
 Tags: linked data, rdf, semantic web, webid, solid
 Requires at least: 3.5.1
-Tested up to: 6.1
+Tested up to: 6.2
 Stable tag: trunk
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl-3.0
@@ -64,6 +64,10 @@ Just copy the contents of this directory to wp-content/plugins/wp-linked-data di
 At least PHP 5.3.0 is required to use this plugin.
 
 == Changelog ==
+
+= 0.5.4 =
+
+* Fix: compatibility with PHP 8
 
 = 0.5.3 =
 

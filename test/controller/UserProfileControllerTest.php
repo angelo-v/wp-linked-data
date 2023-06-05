@@ -23,7 +23,7 @@ function wp_die ($message) {
 
 class UserProfileControllerTest extends TestCase {
 
-    protected function setUp () {
+    protected function setUp (): void {
         global $saved_meta_data;
         $saved_meta_data = array();
         $_POST['webIdLocation'] = '';
@@ -39,9 +39,9 @@ class UserProfileControllerTest extends TestCase {
         $_POST['webId'] = 'http://example.com';
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
-        $this->assertTrue ($result);
-        $this->assertEquals (WebIdService::CUSTOM_WEB_ID, $saved_meta_data['webIdLocation']);
-        $this->assertEquals ('http://example.com', $saved_meta_data['webId']);
+        self::assertTrue ($result);
+        self::assertEquals (WebIdService::CUSTOM_WEB_ID, $saved_meta_data['webIdLocation']);
+        self::assertEquals ('http://example.com', $saved_meta_data['webId']);
     }
 
     public function testDoNotSaveWebIdDataIfUserIsNotAllowedToEdit () {
@@ -50,8 +50,8 @@ class UserProfileControllerTest extends TestCase {
         $_POST['webId'] = 'http://example.com';
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (99);
-        $this->assertFalse ($result);
-        $this->assertTrue (empty($saved_meta_data));
+        self::assertFalse ($result);
+        self::assertTrue (empty($saved_meta_data));
     }
 
     public function testSaveLocalWebIdIfCustomIsEmpty () {
@@ -60,9 +60,9 @@ class UserProfileControllerTest extends TestCase {
         $_POST['webId'] = '';
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
-        $this->assertTrue ($result);
-        $this->assertEquals (WebIdService::LOCAL_WEB_ID, $saved_meta_data['webIdLocation']);
-        $this->assertEquals ('', $saved_meta_data['webId']);
+        self::assertTrue ($result);
+        self::assertEquals (WebIdService::LOCAL_WEB_ID, $saved_meta_data['webIdLocation']);
+        self::assertEquals ('', $saved_meta_data['webId']);
     }
 
     public function testSaveRsaPublicKey () {
@@ -71,9 +71,9 @@ class UserProfileControllerTest extends TestCase {
         $_POST['publicKeyExponent'] = '1234';
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
-        $this->assertTrue ($result);
-        $this->assertEquals ('abc123', $saved_meta_data['publicKeyModulus']);
-        $this->assertEquals (1234, $saved_meta_data['publicKeyExponent']);
+        self::assertTrue ($result);
+        self::assertEquals ('abc123', $saved_meta_data['publicKeyModulus']);
+        self::assertEquals (1234, $saved_meta_data['publicKeyExponent']);
     }
 
     public function testSaveAdditionalRdfXml () {
@@ -90,8 +90,8 @@ class UserProfileControllerTest extends TestCase {
 
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
-        $this->assertTrue ($result);
-        $this->assertEquals ($rdfxml, $saved_meta_data['additionalRdf']);
+        self::assertTrue ($result);
+        self::assertEquals ($rdfxml, $saved_meta_data['additionalRdf']);
     }
 
     public function testSaveEmptyAdditionalRdf () {
@@ -99,8 +99,8 @@ class UserProfileControllerTest extends TestCase {
         $_POST['additionalRdf'] = '   ';
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
-        $this->assertTrue ($result);
-        $this->assertEquals ('', $saved_meta_data['additionalRdf']);
+        self::assertTrue ($result);
+        self::assertEquals ('', $saved_meta_data['additionalRdf']);
     }
 
     public function testSaveAdditionalTurtle () {
@@ -111,8 +111,8 @@ class UserProfileControllerTest extends TestCase {
         $_POST['additionalRdf'] = $turtle;
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
-        $this->assertTrue ($result);
-        $this->assertEquals ($turtle, $saved_meta_data['additionalRdf']);
+        self::assertTrue ($result);
+        self::assertEquals ($turtle, $saved_meta_data['additionalRdf']);
     }
 
     public function testDoNotSaveInvalidRdf () {
@@ -120,8 +120,8 @@ class UserProfileControllerTest extends TestCase {
         $_POST['additionalRdf'] = 'invalid input';
         $controller = new UserProfileController(null);
         $result = $controller->saveWebIdData (42);
-        $this->assertTrue ($result);
-        $this->assertFalse (isset($saved_meta_data['additionalRdf']));
+        self::assertTrue ($result);
+        self::assertFalse (isset($saved_meta_data['additionalRdf']));
     }
 
 }

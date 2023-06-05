@@ -42,7 +42,7 @@ class UserProfileController {
         try {
             $serializedRdf = trim (stripslashes ($_POST['additionalRdf']));
             if (!empty($serializedRdf)) {
-                $graph = new \EasyRdf_Graph();
+                $graph = new \EasyRdf\Graph();
                 $graph->parse ($serializedRdf); // parsing if done to check if syntax is valid
                 update_user_meta ($userId, 'additionalRdf', $serializedRdf);
             } else {

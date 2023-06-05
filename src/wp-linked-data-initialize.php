@@ -22,8 +22,8 @@ if (!class_exists ('WpLinkedDataInitializer')) {
         }
 
         private function registerRdfNamespaces () {
-            EasyRdf_Namespace::set ('bio', 'http://purl.org/vocab/bio/0.1/');
-            EasyRdf_Namespace::set ('sioct', 'http://rdfs.org/sioc/types#');
+            EasyRdf\RdfNamespace::set ('bio', 'http://purl.org/vocab/bio/0.1/');
+            EasyRdf\RdfNamespace::set ('sioct', 'http://rdfs.org/sioc/types#');
         }
 
         private function getSupportedContentNegotiation () {
