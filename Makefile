@@ -1,4 +1,11 @@
 install:
+	rm -rf ./src/vendor && docker run --rm --tty --interactive \
+		--user $(shell id -u):$(shell id -g) \
+		--volume $(shell pwd):/app \
+		--volume $${HOME}/.composer:/tmp \
+		composer install --no-dev
+
+install-dev:
 	docker run --rm --tty --interactive \
 		--user $(shell id -u):$(shell id -g) \
 		--volume $(shell pwd):/app \
@@ -12,7 +19,7 @@ update:
 		--volume $${HOME}/.composer:/tmp \
 		composer update
 
-test:
+test: install-dev
 	docker run --rm --tty --interactive \
 		--user $(shell id -u):$(shell id -g) \
 		--volume $(shell pwd):/app \
