@@ -3,12 +3,12 @@ version: 2
 jobs:
   test:
     docker:
-      - image: phpunit/phpunit
+      - image: composer
     steps:
       - checkout
       - run: mkdir -p ~/phpunit
       - run: composer install
-      - run: phpunit test --log-junit ~/phpunit/test-results.xml
+      - run: composer test-ci
       - store_test_results:
           path: ~/phpunit
       - store_artifacts:

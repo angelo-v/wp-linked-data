@@ -13,6 +13,9 @@
     "scripts": {
         "test": [
             "phpunit --testdox-html test-results.html test"
+        ],
+        "test-ci": [
+            "phpunit test --log-junit ~/phpunit/test-results.xml"
         ]
     }
 }
