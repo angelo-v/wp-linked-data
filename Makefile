@@ -27,7 +27,7 @@ test: install-dev
 		composer test
 
 start: install
-	docker-compose --project-name wp-linked-data-dev --file=./docker/development.yml up --build -d
+	docker compose --project-name wp-linked-data-dev --file=./docker/development.yml up --build -d
 
 plugin-repo:
 	svn co https://plugins.svn.wordpress.org/wp-linked-data plugin-repo

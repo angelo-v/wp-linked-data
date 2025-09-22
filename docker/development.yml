@@ -1,10 +1,22 @@
 version: '3.3'
 
 services:
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+    ports:
+      - "8000:80"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
   db:
     image: mysql:5.7
     volumes:
-    - db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: somewordpress
       MYSQL_DATABASE: wordpress
@@ -13,10 +25,26 @@ services:
 
   wordpress:
     depends_on:
-    - db
+      - db
     image: wordpress:latest
-    ports:
-    - "8000:80"
+    labels:
+      - "traefik.enable=true"
+      # Main router with CORS enabled (excludes wp-admin)
+      - "traefik.http.routers.wordpress.rule=Host(`wordpress.localhost`) && !PathPrefix(`/wp-admin`)"
+      - "traefik.http.routers.wordpress.middlewares=cors-wordpress"
+      - "traefik.http.routers.wordpress.service=wordpress"
+      # Separate router for wp-admin without CORS
+      - "traefik.http.routers.wordpress-admin.rule=Host(`wordpress.localhost`) && PathPrefix(`/wp-admin`)"
+      - "traefik.http.routers.wordpress-admin.service=wordpress"
+      # Define the service explicitly
+      - "traefik.http.services.wordpress.loadbalancer.server.port=80"
+      # CORS middleware configuration
+      - "traefik.http.middlewares.cors-wordpress.headers.accesscontrolallowmethods=GET,OPTIONS"
+      - "traefik.http.middlewares.cors-wordpress.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.cors-wordpress.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.cors-wordpress.headers.addvaryheader=true"
+      - "traefik.http.middlewares.cors-wordpress.headers.accesscontrolallowcredentials=false"
+      - "traefik.http.middlewares.cors-wordpress.headers.accesscontrolallowheaders=Origin,Accept"
     volumes:
       - ../src/:/var/www/html/wp-content/plugins/wp-linked-data
     environment:
